@@ -20,9 +20,10 @@ export default function login(){
         try {
             const loginUrl = process.env.NEXT_PUBLIC_API_LOGIN_URL;
             const resultLogin =  (await axios.post(loginUrl, data)).data
-            // console.log("resultLogin",resultLogin)
+            console.log("resultLogin",resultLogin)
             setToken(resultLogin.accessToken)
-            localStorage.setItem("token", resultLogin.accessToken);
+            localStorage.setItem("token", JSON.stringify(resultLogin));
+            // localStorage.setItem("user", resultLogin.name)
             router.push('/home')
         } catch (error) {
             const responseErr = error.response.data
