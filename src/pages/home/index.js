@@ -1,22 +1,19 @@
 import  Heading  from '../components/heading.js';
-import { useEffect } from 'react';
+import Newsfeed from './newsfeed.js';
+import { useState } from "react";
+import { useEffect } from "react";
 
 export default function Home(){
 
-    let token = null;
-    let user = null;
-
-    if (typeof window !== 'undefined') {
-        // Perform localStorage action
-        // user = localStorage.getItem("user");
-        token = JSON.parse(localStorage.getItem("token"));
-
-      }
+    const [token, setToken] = useState(null);
+    useEffect(() => {setToken(JSON.parse(localStorage.getItem("token")))}, []);
 
     return (
         <>
+            {/* <h1>{token.accessToken}</h1> */}
             <Heading token = {token}/>
             <h1>This is homepage</h1>
+            <Newsfeed token = {token}/>
         </>
     )
 }

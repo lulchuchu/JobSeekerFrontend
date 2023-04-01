@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link'
 import axios from "axios";
+import Heading from '../components/heading';
 
 export default function login() {
     const [username, setUsername] = useState("");
@@ -30,6 +31,7 @@ export default function login() {
 
     return (
         <>
+            <Heading />
             <div className="layout-login">
                 <div className="head-login">
                     <h1>register</h1>
