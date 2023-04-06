@@ -12,7 +12,7 @@ import NavBarIcon from "./navBarIcon"
 import styles from '@/styles/heading.module.css'
 
 
-export default function Heading({tok}){
+export default function Heading(){
 
     const [token, setToken] = useState(null);
     useEffect(() => {setToken(JSON.parse(localStorage.getItem("token")))}, []);

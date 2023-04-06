@@ -1,7 +1,11 @@
-import Post from "./post"
+
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
+import styles from '@/styles/home.module.css';
+
+import Post from "./post"
+import CreatePost from "./createPost";
 
 export default function Newsfeed(){
     const [token, setToken] = useState(null);
@@ -23,8 +27,12 @@ export default function Newsfeed(){
 
     return(
         <>
-            <h1>this is newsfeed</h1>
-            {token && news.map((post) => <Post key={post.id} post={post} token={token} />)}
+
+            <div className={styles.mainLayout}>
+                {token && <CreatePost token={token} />}
+                {/* Newsfeed */}
+                {token && news.map((post) => <Post key={post.id} post={post} token={token} />)}
+            </div>
         </>
     )
 }

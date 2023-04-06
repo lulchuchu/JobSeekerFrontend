@@ -31,7 +31,7 @@ export default function InfoCard({userDetail, isMyself}){
 
     return(
         <div className={styles.infoCard}>
-            <img className={styles.backGround} src = "/pics/background.png"></img>
+            <img className={styles.backGround} src = {process.env.NEXT_PUBLIC_API_PIC_URL+"background.jpg"}></img>
             <img className = {styles.profilePic} src={process.env.NEXT_PUBLIC_API_PIC_URL+userDetail?.profilePicture} alt={userDetail?.name}/>
             <div className={styles.mainInfo}>
                 <h1>{userDetail?.name}</h1>

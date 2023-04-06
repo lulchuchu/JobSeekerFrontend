@@ -2,6 +2,7 @@ import  Heading  from '../components/heading.js';
 import Newsfeed from './newsfeed.js';
 import { useState } from "react";
 import { useEffect } from "react";
+import styles from '@/styles/home.module.css';
 
 export default function Home(){
 
@@ -10,10 +11,11 @@ export default function Home(){
 
     return (
         <>
-            {/* <h1>{token.accessToken}</h1> */}
             <Heading />
-            <h1>This is homepage</h1>
-            <Newsfeed />
+            <div className={styles.layout}>
+                <Newsfeed />
+
+            </div>
         </>
     )
 }
