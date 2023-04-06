@@ -1,5 +1,5 @@
 import Link from "next/link"
-import styles from '@/styles/navBarIcon.module.css'
+import styles from '@/styles/heading.module.css'
 
 export default function NavBarIcon(props) {
     let url = props.url;
@@ -10,9 +10,9 @@ export default function NavBarIcon(props) {
 
     return(
         <>
-            <Link href = {url}>
-                {props.component}
-                <span>{props.name}</span>
+            <Link href = {url} className={styles.icon}>
+                <div>{props.component}</div>
+                <div>{props.name}</div>
                 {console.log("navigate to " + props.name + " icon")}
             </Link>
         </>

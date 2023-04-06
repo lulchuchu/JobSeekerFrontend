@@ -3,6 +3,8 @@ import Link from 'next/link'
 import axios from "axios";
 import { redirect } from 'next/dist/server/api-utils';
 import { useRouter } from 'next/router'
+import  Heading  from '../components/heading.js';
+import styles from '@/styles/login.module.css'
 
 export default function login(){
     const [username, setUsername] = useState("");
@@ -11,7 +13,7 @@ export default function login(){
     const [name, setName] = useState("");
     const router = useRouter()
 
-    const sendInput = async (event) => {
+    const sendLogin = async (event) => {
         event.preventDefault();
         const data = {
             "username": username,
@@ -30,26 +32,59 @@ export default function login(){
             alert(responseErr)
         }
     };
+
+    const sendRegister = async (event) => {
+        event.preventDefault();
+        const data = {
+            "username": username,
+            "password": password
+        };
+        try {
+            const loginUrl = process.env.NEXT_PUBLIC_API_LOGIN_URL;
+            const resultLogin =  (await axios.post(loginUrl, data)).data
+            console.log("resultLogin",resultLogin)
+            setToken(resultLogin.accessToken)
+            localStorage.setItem("token", JSON.stringify(resultLogin));
+            // localStorage.setItem("user", resultLogin.name)
+            router.push('/home')
+        } catch (error) {
+            const responseErr = error.response.data
+            alert(responseErr)
+        }
+    }
     
     return (
         <>
-            <div className="layout-login">
-                <div className="head-login">
-                    <h1>Log In</h1>
-                </div>
-                <div className="main-login">
+            <Heading token = {token}/>
+            <div className={styles.layoutLogin}>
+
+                <div className={styles.formLogin}>
+                    <div className={styles.headLogin}>
+                        <h1>Welcome</h1>
+                    </div>
                     <form className="form-input">
-                        <label id = "username">username</label>
-                        <input type="text" id="username" name="username" placeholder="username" onChange={(e) => setUsername(e.target.value)}/><br/>
-                        <label id = "password">password</label>
-                        <input type="password" id="password" name="password" placeholder="password" onChange={(e) => setPassword(e.target.value)}/><br/>
+                        <div className={styles.form}>
+                            <div className = {styles.label} id = "username">Username or email</div>
+                            <input className={styles.input} type="text" id="username" name="username" placeholder="username" onChange={(e) => setUsername(e.target.value)}/><br/>
+
+                        </div>
+                        <div className={styles.form}>
+                            <div className = {styles.label} id = "password">Password</div>
+                            <input className={styles.input} type="password" id="password" name="password" placeholder="password" onChange={(e) => setPassword(e.target.value)}/><br/>
+                        </div>
                     </form>
-                    <form className="form-submit">
+                    <form >
                         {/* <Link href={(token.accessToken) ? "/home" : "/login"} state = {(token.accessToken) ? {nameUser: token.name, tokenUser:token.accessToken} : ""}> */}
-                            <input type="submit" value="Log In" onClick={sendInput}/>
+                            <input className = {styles.button} type="submit" value="Log In" onClick={sendLogin}/>
                         {/* </Link> */}
                     </form>
                 </div>
+
+                <div className={styles.or}>or</div>
+
+                <form >
+                    <input className = {styles.button} type="submit" value="New? Join now" onClick={sendLogin}/>
+                </form>
             </div>
         </>    
     )
