@@ -11,9 +11,9 @@ export default function Home(){
     return (
         <>
             {/* <h1>{token.accessToken}</h1> */}
-            <Heading token = {token}/>
+            <Heading />
             <h1>This is homepage</h1>
-            <Newsfeed token = {token}/>
+            <Newsfeed />
         </>
     )
 }

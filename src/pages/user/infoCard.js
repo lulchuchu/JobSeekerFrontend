@@ -2,10 +2,10 @@ import { useState } from "react"
 import { useEffect } from "react"
 import axios from "axios"
 
-import styles from "@/styles/userpage.module.css"
+import styles from "@/styles/infocard.module.css"
 
-
-export default function InfoCard({userDetail, isMyself, img_src}){
+//Phan tren cua trang ca nhan
+export default function InfoCard({userDetail, isMyself}){
     const [isFollowed, setIsFollowed] = useState(false);
     const [token, setToken] = useState(null);
 
@@ -32,7 +32,7 @@ export default function InfoCard({userDetail, isMyself, img_src}){
     return(
         <div className={styles.infoCard}>
             <img className={styles.backGround} src = "/pics/background.png"></img>
-            <img className = {styles.profilePic} src={img_src} alt={userDetail?.name}/>
+            <img className = {styles.profilePic} src={process.env.NEXT_PUBLIC_API_PIC_URL+userDetail?.profilePicture} alt={userDetail?.name}/>
             <div className={styles.mainInfo}>
                 <h1>{userDetail?.name}</h1>
                 <h2>{userDetail?.email}</h2>

@@ -3,8 +3,11 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 
-export default function Newsfeed({token}){
+export default function Newsfeed(){
+    const [token, setToken] = useState(null);
     const [news, setNews] = useState([]);
+    
+    useEffect(() => {setToken(JSON.parse(localStorage.getItem("token")))}, []);
     useEffect(() => {
         if(token != null){
         const postUrl = process.env.NEXT_PUBLIC_API_POST_URL + "newsfeed";
