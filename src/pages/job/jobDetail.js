@@ -1,9 +1,42 @@
 import styles from "@/styles/job.module.css"
+import axios from "axios"
 import Link from "next/link"
+import { useEffect,useState } from "react"
 
 import {RiShareBoxLine} from "react-icons/ri"
 
 export default function JobDetail({job}){
+
+    const [token, setToken] = useState(null);
+    const [isApplied, setIsApplied] = useState(false);
+    const jobId = job.id;
+
+    useEffect(() => {setToken(JSON.parse(localStorage.getItem("token")))}, []);
+
+    useEffect(()=>{
+        if(token && jobId){
+            const isApplied = async ()=>{
+                const res = await axios.get(process.env.NEXT_PUBLIC_API_JOB_URL + 'checkApply',
+                        {headers: {"Authorization" : `Bearer ${token.accessToken}`} , params: {applicationId: jobId}});
+                console.log("data is ", res.data)   
+                setIsApplied(res.data);
+            }
+            isApplied();
+        }
+
+    },[token,jobId])
+
+    function handleClickApply(){
+        const apply = async ()=>{
+            const res = await axios.post(process.env.NEXT_PUBLIC_API_JOB_URL + 'apply' + "?applicationId=" + jobId,
+                {},{headers: {"Authorization" : `Bearer ${token.accessToken}`}},
+                );
+            console.log("data is ", res.data)   
+        }
+        apply();
+        setIsApplied(!isApplied);
+    }
+
     return (
         <div className={styles.detail}>
             <div className={styles.content}>
@@ -19,8 +52,8 @@ export default function JobDetail({job}){
                 </div>
                 <div className={styles.type}>{job.type}</div>
 
-                <button className={styles.applyButton}>
-                    <p className={styles.buttonText}>Apply</p>
+                <button className={styles.applyButton} onClick={handleClickApply}>
+                    <p className={styles.buttonText}>{isApplied ? 'Applied':'Apply'}</p>
                     <RiShareBoxLine size={24} className={styles.icon}/>
                 </button>
 

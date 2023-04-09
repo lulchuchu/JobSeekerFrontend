@@ -1,6 +1,10 @@
+.main{
+    display: flex;
+}
+
 .layoutLogin{
     position: relative;
-    left: 100px;
+    left: 300px;
     width: 55%;
 }
 

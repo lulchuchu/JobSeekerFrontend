@@ -36,6 +36,21 @@
     color:gray
 }
 
+.infoReact{
+    display: flex;
+}
+
+.like{
+    margin-left:10px;
+    width: 200px;
+}
+
+.comment{
+    text-align: right;
+    margin-right: 20px;
+    width: 100%;
+}
+
 .buttonLayout{
     display: flex;
     margin: 10px 0px 0px 0px;
