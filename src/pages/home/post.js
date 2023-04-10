@@ -16,6 +16,7 @@ export default function Post({token, post}){
     const [countLike, setCountLike] = useState(post.likeCount);
     const [countComment, setCountComment] = useState(post.commentCount);
     const [comments, setComments] = useState([]);
+    const [commentContent, setCommentContent] = useState('');
     
     const postId = post.id;
     const imgs = post.images.split(",");
@@ -40,6 +41,8 @@ export default function Post({token, post}){
         isLiked ? setCountLike(countLike-1):setCountLike(countLike+1)
         setIsLiked(!isLiked);
     }
+    
+
 
     function handleCommentButton(){
         const comment = async() => {
@@ -48,14 +51,26 @@ export default function Post({token, post}){
             setComments(result.data);
         }
         comment();
+        console.log("running comment button")
     }
 
     function handleShareButton(){
 
     }
 
-    function handleSendClick(){
-        
+    async function handleSendButton(){
+        const data = {
+            "contents": commentContent,
+            "postId": postId,
+        }
+        const send = async() => {
+            const result = axios.post(process.env.NEXT_PUBLIC_API_COMMENT_URL + 'post', data, {headers:{"Authorization" : `Bearer ${token.accessToken}`}})
+            handleCommentButton();
+        }
+        await send();
+        setCountComment(countComment+1);
+        handleCommentButton();
+        // console.log("hit the wowo")
     }
 
     return (
@@ -90,7 +105,7 @@ export default function Post({token, post}){
                     <p className={styles.buttonText}>Share</p>
                 </button>
             </div>
-            {console.log(comments)}
+            {/* {console.log(comments)} */}
             <div className={styles.commentLayout}>
                 {comments != undefined ? comments.map((comment) => (
                     <div className={styles.comment}>
@@ -104,9 +119,9 @@ export default function Post({token, post}){
             </div>
             <div className={styles.create}>
                 <img className={styles.profilePic} src={process.env.NEXT_PUBLIC_API_PIC_URL+token.profilePicture} alt = {token.id} width={41} height={41}/>
-                <input className={styles.input} placeholder='Start a post'></input>
+                <input className={styles.input} placeholder='Write a comment' onChange={(e) => setCommentContent(e.target.value)}></input>
                 <Link href = "">
-                    <div onClick={handleSendClick}>
+                    <div onClick={handleSendButton}>
                         <IoSend className = {styles.sendIcon} size={24}/>
                     </div>
                 </Link>
