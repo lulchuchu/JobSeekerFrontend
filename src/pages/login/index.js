@@ -62,17 +62,19 @@ export default function login() {
                         <div className={styles.headLogin}>
                             <h1>Welcome</h1>
                         </div>
+                        {/* Input form */}
                         <form className="form-input">
                             <div className={styles.form}>
                                 <div className={styles.label} id="username">Username or email</div>
                                 <input className={styles.input} type="text" id="username" name="username" placeholder="username" onChange={(e) => setUsername(e.target.value)} /><br />
-
                             </div>
                             <div className={styles.form}>
                                 <div className={styles.label} id="password">Password</div>
                                 <input className={styles.input} type="password" id="password" name="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} /><br />
                             </div>
                         </form>
+
+                        {/* Login button */}
                         <form >
                             {/* <Link href={(token.accessToken) ? "/home" : "/login"} state = {(token.accessToken) ? {nameUser: token.name, tokenUser:token.accessToken} : ""}> */}
                             <input className={styles.button} type="submit" value="Log In" onClick={sendLogin} />
@@ -86,6 +88,8 @@ export default function login() {
                         <input className={styles.button} type="submit" value="New? Join now" onClick={sendLogin} />
                     </form>
                 </div>
+
+                {/* Picture */}
                 <img src="pics/Work_from_home.jpg" width={700} height={700}/>
             </div>
 

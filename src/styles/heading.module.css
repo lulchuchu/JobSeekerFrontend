@@ -17,3 +17,8 @@
     display: flex;
     right: 10px;
 }
+
+.profilePicture{
+    border-radius: 50%;
+
+}

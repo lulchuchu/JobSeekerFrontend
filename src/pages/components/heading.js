@@ -24,11 +24,11 @@ export default function Heading(){
                 <img alt = "home-icon" src = "/pics/cheemspic.png" width={41} height={41}></img>
             </Link>
             <span className={styles.iconOption}>
-                <NavBarIcon url = "/job" component = {<MdWork size={24}/>} name = "Jobs"/>    
-                {token && <NavBarIcon url = "/message" component = {<AiFillMessage size={24}/>} name = "Messages"/>}
-                {token && <NavBarIcon url = "/notification" component = {<IoMdNotifications size={24}/>} name = "Notifications"/>}
+                <NavBarIcon url = "/job" component = {<MdWork size={30}/>} name = "Jobs"/>    
+                {token && <NavBarIcon url = "/message" component = {<AiFillMessage size={30}/>} name = "Messages"/>}
+                {token && <NavBarIcon url = "/notification" component = {<IoMdNotifications size={30}/>} name = "Notifications"/>}
                 {token ? 
-                    <NavBarIcon token = {token} url = "/user" component = {<img alt = "profile-icon" src={process.env.NEXT_PUBLIC_API_PIC_URL+token.profilePicture} width={24} height={24}></img>} name = "Profile"/> : 
+                    <NavBarIcon token = {token} url = "/user" component = {<img className={styles.profilePicture} alt = "profile-icon" src={process.env.NEXT_PUBLIC_API_PIC_URL+token.profilePicture} width={30} height={30}></img>} name = "Profile"/> : 
                     <NavBarIcon url = "/login" component = {<FiLogIn size={24}/>} name = "Login"/>
                 }
             </span>

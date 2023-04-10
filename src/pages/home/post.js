@@ -5,6 +5,7 @@ import Link from "next/link"
 
 import {AiOutlineLike, AiTwotoneLike} from "react-icons/ai"
 import {MdOutlineInsertComment, MdInsertComment} from "react-icons/md"
+import {IoSend} from "react-icons/io5"
 import {BsShare, BsShareFill} from "react-icons/bs"
 
 import styles from '@/styles/post.module.css';
@@ -14,7 +15,11 @@ export default function Post({token, post}){
     const [isLiked, setIsLiked] = useState(false);
     const [countLike, setCountLike] = useState(post.likeCount);
     const [countComment, setCountComment] = useState(post.commentCount);
+    const [comments, setComments] = useState([]);
+    
     const postId = post.id;
+    const imgs = post.images.split(",");
+
     useEffect(()=>{
         if(token && postId){
             const isLiked = async () => {
@@ -26,11 +31,10 @@ export default function Post({token, post}){
         }
     }, [token, postId])
 
-    const imgs = post.images.split(",");
 
     function handleLikeButton(){
         const like = async () => {
-            const res = axios.post(process.env.NEXT_PUBLIC_API_LIKE_URL+'create?postId=' + postId, {}, {headers: {"Authorization" : `Bearer ${token.accessToken}`}});
+            const res = await axios.post(process.env.NEXT_PUBLIC_API_LIKE_URL+'create?postId=' + postId, {}, {headers: {"Authorization" : `Bearer ${token.accessToken}`}});
         }
         like();
         isLiked ? setCountLike(countLike-1):setCountLike(countLike+1)
@@ -38,11 +42,20 @@ export default function Post({token, post}){
     }
 
     function handleCommentButton(){
-
+        const comment = async() => {
+            const result = await axios.get(process.env.NEXT_PUBLIC_API_COMMENT_URL + 'show', {headers:{"Authorization" : `Bearer ${token.accessToken}`}, params:{postId: postId}})
+            console.log(result.data);
+            setComments(result.data);
+        }
+        comment();
     }
 
     function handleShareButton(){
 
+    }
+
+    function handleSendClick(){
+        
     }
 
     return (
@@ -60,8 +73,8 @@ export default function Post({token, post}){
             <p className={styles.content}>{post.content}</p>
             {imgs.map((img) => <img src={process.env.NEXT_PUBLIC_API_PIC_URL+img} alt = {post.user.name} width={200} height={200}/>)}
             <div className={styles.infoReact}>
-                <div className={styles.like}>{countLike} likes</div>
-                <div className={styles.comment}>{countComment} comments</div>
+                <div className={styles.countLike}>{countLike} likes</div>
+                <div className={styles.countComment}>{countComment} comments</div>
             </div>
             <div className={styles.buttonLayout}>
                 <button className={styles.button} onClick={handleLikeButton}>
@@ -77,6 +90,28 @@ export default function Post({token, post}){
                     <p className={styles.buttonText}>Share</p>
                 </button>
             </div>
+            {console.log(comments)}
+            <div className={styles.commentLayout}>
+                {comments != undefined ? comments.map((comment) => (
+                    <div className={styles.comment}>
+                        <img className={styles.commentProfilePic} src={process.env.NEXT_PUBLIC_API_PIC_URL+comment.userProfilePicture} alt = {comment.userName} width={41} height={41}/>
+                        <div className={styles.commentBody}>
+                            <p className={styles.userName}>{comment.userName}</p>
+                            <p className={styles.commentContent}>{comment.contents}</p>
+                        </div>
+                    </div>
+                )):null}
+            </div>
+            <div className={styles.create}>
+                <img className={styles.profilePic} src={process.env.NEXT_PUBLIC_API_PIC_URL+token.profilePicture} alt = {token.id} width={41} height={41}/>
+                <input className={styles.input} placeholder='Start a post'></input>
+                <Link href = "">
+                    <div onClick={handleSendClick}>
+                        <IoSend className = {styles.sendIcon} size={24}/>
+                    </div>
+                </Link>
+            </div>
+
         </div>
     )
 
