@@ -3,9 +3,6 @@ import styles from "@/styles/job.module.css"
 
 
 export default function Job({job, key, state}){
-
-
-
     return(
         <div className={styles.job}>
             <img className={styles.img} src = {job.company.profilePicture} width={41} height={41}/>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
 import Link from "next/link"
 
@@ -17,6 +17,7 @@ export default function Post({token, post}){
     const [countComment, setCountComment] = useState(post.commentCount);
     const [comments, setComments] = useState([]);
     const [commentContent, setCommentContent] = useState('');
+    const ref = useRef();
     
     const postId = post.id;
     const imgs = post.images.split(",");
@@ -68,6 +69,7 @@ export default function Post({token, post}){
             handleCommentButton();
         }
         await send();
+        ref.current.value = '';
         setCountComment(countComment+1);
         handleCommentButton();
         // console.log("hit the wowo")
@@ -119,7 +121,7 @@ export default function Post({token, post}){
             </div>
             <div className={styles.create}>
                 <img className={styles.profilePic} src={process.env.NEXT_PUBLIC_API_PIC_URL+token.profilePicture} alt = {token.id} width={41} height={41}/>
-                <input className={styles.input} placeholder='Write a comment' onChange={(e) => setCommentContent(e.target.value)}></input>
+                <input className={styles.input} ref = {ref} placeholder='Write a comment' onChange={(e) => setCommentContent(e.target.value)}></input>
                 <Link href = "">
                     <div onClick={handleSendButton}>
                         <IoSend className = {styles.sendIcon} size={24}/>

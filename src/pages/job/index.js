@@ -5,6 +5,7 @@ import axios from "axios"
 import Heading from "../components/heading";
 import Job from "./jobInfo";
 import JobDetail from "./jobDetail";
+import ButtonFilter from "./buttonFilter";
 
 export default function Jobb() {
     const [job, setJob] = useState([]);
@@ -18,25 +19,11 @@ export default function Jobb() {
         fetchData();
     }, [])
 
-
     return (
         <>
             <Heading />
             <div className={styles.layout}>
-                <div className={styles.buttonList}>
-                    <button className={styles.button}>
-                        <p className={styles.textButton}>Date posted</p>
-                    </button>
-                    <button className={styles.button}>
-                        <p className={styles.textButton}>Experience level</p>
-                    </button>
-                    <button className={styles.button}>
-                        <p className={styles.textButton}>Job type</p>
-                    </button>
-                    <button className={styles.button}>
-                        <p className={styles.textButton}>On-site/remote</p>
-                    </button>
-                </div>
+                <ButtonFilter />
                 <div className={styles.mainLayout}>
                     <div className={styles.left}>
                         {job.map(job => {
