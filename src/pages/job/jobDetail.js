@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useEffect,useState } from "react"
 
 import {RiShareBoxLine} from "react-icons/ri"
+import company from "../company/[index]"
 
 export default function JobDetail({job}){
 
@@ -42,7 +43,7 @@ export default function JobDetail({job}){
             <div className={styles.content}>
                 <div className={styles.detailTitle}>{job.title}</div>
                 <div className={styles.subInfo}>
-                    <Link href={job.company.website}>
+                    <Link href={'/company/'+job.company.id}>
                         <div className={styles.company}>{job.company.name}</div>
                     </Link>
                     <div className={styles.address}>{job.address}</div>

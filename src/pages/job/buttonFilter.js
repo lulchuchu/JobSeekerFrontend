@@ -2,7 +2,7 @@ import styles from "@/styles/job.module.css"
 import { useState, useEffect, useContext, useRef } from "react"
 import axios from "axios"
 
-export default function ButtonFilter({change}){
+export default function ButtonFilter({companyId, change}){
     const [dateButtonToogle, setDateButtonToogle] = useState(false);
     const [experienceButtonToogle, setExperienceButtonToogle] = useState(false);
     const [jobTypeButtonToogle, setJobTypeButtonToogle] = useState(false);
@@ -68,6 +68,7 @@ export default function ButtonFilter({change}){
 
     function handleSubmitButton() {
         const data = {
+            companyId: companyId,
             date: currentDate,
             experience: currentExperience,
             jobType: currentJobType,

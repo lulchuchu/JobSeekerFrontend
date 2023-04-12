@@ -1,23 +1,23 @@
 /* mainLayout */
 
-.layout{
-    margin-top:20px;
+.layout {
+    margin-top: 20px;
 }
 
-.mainLayout{
+.mainLayout {
     display: flex;
-    margin-left:20%;
-    margin-right:20%;
+    margin-left: 20%;
+    margin-right: 20%;
 }
 
 /* button list */
-.buttonList{
+.buttonList {
     display: flex;
     justify-content: center;
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
 
-.button{
+.button {
     display: flex;
     border-radius: 24px;
     border: 1px solid gray;
@@ -29,136 +29,132 @@
     background-color: white;
 }
 
-.textButton{
+.textButton {
     margin: auto;
 }
 
 /* job info */
-.job{
+.job {
     display: flex;
-    margin-bottom:10px;
+    margin-bottom: 10px;
     color: gray;
     border-radius: 10px;
     border: 1px solid #e6e6e6;
     background-color: white;
-
 }
 
-.title{
-    color:black;
+.title {
+    color: black;
     margin-right: 10px;
-    margin-top:10px
-
+    margin-top: 10px;
 }
 
-.img{
-    margin:auto;
+.img {
+    margin: auto;
     margin-right: 10px;
-    margin-left:10px
+    margin-left: 10px;
 }
 
-.address{
+.address {
     margin-right: 10px;
-    margin-bottom:10px
+    margin-bottom: 10px;
 }
 
 /* details */
-.detail{
+.detail {
     width: 60%;
     margin-left: 20px;
     border-radius: 10px;
     border: 1px solid #e6e6e6;
     background-color: white;
-
 }
 
-.content{
-    margin:10px 10px 10px 10px;
+.content {
+    margin: 10px 10px 10px 10px;
 }
 
-.detailTitle{
-    font-size:25px;
+.detailTitle {
+    font-size: 25px;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
-.subInfo{
+.subInfo {
     display: flex;
     color: gray;
     font-size: 15px;
 }
 
-.company{
-    margin-right:10px;
+.company {
+    margin-right: 10px;
 }
 
-.date{
+.date {
     color: gray;
     font-size: 16px;
     margin-bottom: 5px;
 }
 
-.type{
+.type {
     color: gray;
     font-size: 16px;
 }
 
-.applyButton{
+.applyButton {
     display: flex;
     border-radius: 24px;
     font-size: 16px;
     width: 150px;
     height: 40px;
     margin-top: 10px;
-    background-color: #1DA1F2;
-    border: 1px solid #1DA1F2;
-    color:white
+    background-color: #1da1f2;
+    border: 1px solid #1da1f2;
+    color: white;
 }
 
-.buttonText{
+.buttonText {
     margin: auto;
 }
 
-.icon{
-    position:absolute;
+.icon {
+    position: absolute;
     margin-top: 6px;
 }
 
 /* filter button */
-.filterButton{
+.filterButton {
     width: 180px;
     position: absolute;
-    left:-1;
+    left: -1;
     border-radius: 24px;
     border: 1px solid gray;
     background-color: white;
     z-index: 1;
 }
 
-.list{
+.list {
     list-style-type: none;
     padding-left: 35px;
     /* margin-right: 10px; */
 }
 
-.submitButton{
+.submitButton {
     border-radius: 24px;
     font-size: 16px;
     width: 120px;
     height: 30px;
-    margin-left:30px;
+    margin-left: 30px;
     /* text-align: center; */
-    background-color: #1DA1F2;
-    border: 1px solid #1DA1F2;
-    color:white
+    background-color: #1da1f2;
+    border: 1px solid #1da1f2;
+    color: white;
 }
 
-.clearButton{
+.clearButton {
     border-radius: 24px;
     font-size: 16px;
     width: 120px;
     height: 30px;
-    margin-left:30px;
+    margin-left: 30px;
     border: 1px solid;
-
 }

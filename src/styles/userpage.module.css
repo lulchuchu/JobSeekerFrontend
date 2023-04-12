@@ -21,10 +21,10 @@
 
 }
 
-.mainExp{
+.mainContent{
     /* position: relative; */
     background-color: white;
-    /* margin-bottom: 20px; */
+    margin-bottom: 20px;
     border-radius: 24px;
     min-height: 100px;
 }
@@ -41,12 +41,63 @@
 .content{
     margin-right: 20px;
     margin-bottom: 10px;
+    margin-top:15px;
     color: rgba(0,0,0,0.6);
     margin-right: 20px;
     margin-left: 20px;
     margin-bottom: 10px;
 }
 
+/* JobOpeningCompany */
 
+.mainJob{
+    display: flex;
+}
 
+.job{
+    display: flex;
+    margin:10px 20px ;
+    width:  50%;
+}
+
+.showAll{
+    width: 100%;
+    background-color: white;
+    border: 0px;
+    font-size: 16px;
+    height:30px
+}
+
+/* Show Post */
+
+.mainPost{
+    display: flex;
+    margin-top: 20px;
+}
+
+.postDetail{
+    width: 50%;
+    margin-top:20px;
+    margin-bottom: 10px;
+    background-color: white;
+    border: 1px solid gray;
+
+}
+
+.postInfo{
+    display: flex;
+}
+
+.profilePic{
+    width: 41px;
+    height: 41px;
+    border-radius: 50%;
+    margin: auto;
+    margin-left:10px;
+    margin-right:10px;
+}
+
+.info{
+
+}
 

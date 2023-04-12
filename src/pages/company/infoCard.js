@@ -36,7 +36,7 @@ export default function InfoCard({company}) {
     return(
         <div className={styles.infoCard}>
             <img className={styles.backGround} src = "/pics/background.png"></img>
-            <img className = {styles.profilePic} src={company?.profilePicture} alt={company?.name}/>
+            <img className = {styles.profilePic} src={process.env.NEXT_PUBLIC_API_PIC_URL + company?.profilePicture} alt={company?.name}/>
             <div className={styles.mainInfo}>
                 <h1>{company?.name}</h1>
                 <p>{company?.industry}</p>

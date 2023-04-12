@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export default function Experience({experience}){
     console.log("experience in exp", experience)
-    const companyLogo = experience.company.profilePicture;
+    const companyLogo = process.env.NEXT_PUBLIC_API_PIC_URL + experience.company.profilePicture;
     // const logoUrl = process.env.NEXT_PUBLIC_API_PIC_URL + companyLogo;
     const companyId = experience.company.id;
     const companyName = experience.company.name;
