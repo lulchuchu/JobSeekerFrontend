@@ -17,6 +17,7 @@ export default function Post({token, post}){
     const [countComment, setCountComment] = useState(post.commentCount);
     const [comments, setComments] = useState([]);
     const [commentContent, setCommentContent] = useState('');
+    const [commentShowing, setCommentShowing] = useState(false);
     const ref = useRef();
     
     const postId = post.id;
@@ -46,13 +47,18 @@ export default function Post({token, post}){
 
 
     function handleCommentButton(){
-        const comment = async() => {
-            const result = await axios.get(process.env.NEXT_PUBLIC_API_COMMENT_URL + 'show', {headers:{"Authorization" : `Bearer ${token.accessToken}`}, params:{postId: postId}})
-            console.log(result.data);
-            setComments(result.data);
+        if (commentShowing){
+            setCommentShowing(false);
+        }else{
+            setCommentShowing(true);
+            const comment = async() => {
+                const result = await axios.get(process.env.NEXT_PUBLIC_API_COMMENT_URL + 'show', {headers:{"Authorization" : `Bearer ${token.accessToken}`}, params:{postId: postId}})
+                console.log(result.data);
+                setComments(result.data);
+            }
+            comment();
+            console.log("running comment button")
         }
-        comment();
-        console.log("running comment button")
     }
 
     function handleShareButton(){
@@ -109,7 +115,7 @@ export default function Post({token, post}){
             </div>
             {/* {console.log(comments)} */}
             <div className={styles.commentLayout}>
-                {comments != undefined ? comments.map((comment) => (
+                {(comments != undefined&&commentShowing) ? comments.map((comment) => (
                     <div className={styles.comment}>
                         <img className={styles.commentProfilePic} src={process.env.NEXT_PUBLIC_API_PIC_URL+comment.userProfilePicture} alt = {comment.userName} width={41} height={41}/>
                         <div className={styles.commentBody}>

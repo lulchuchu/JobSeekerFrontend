@@ -10,20 +10,29 @@ import ButtonFilter from "./buttonFilter";
 export default function Jobb() {
     const [job, setJob] = useState([]);
     const [currentJob, setCurrentJob] = useState(null);
+    const [currValue, setCurrValue] = useState(
+        {
+            date: null,
+            experience: null,
+            jobType: null,
+            onSite: null
+        }
+    );
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await axios.get(process.env.NEXT_PUBLIC_API_JOB_URL + "all");
+            const result = await axios.get(process.env.NEXT_PUBLIC_API_JOB_URL + "all", {params: {date: currValue.date, experience: currValue.experience, jobType: currValue.jobType, onSite: currValue.onSite}});
             setJob(result.data);
         }
         fetchData();
-    }, [])
+    }, [currValue])
 
     return (
         <>
             <Heading />
             <div className={styles.layout}>
-                <ButtonFilter />
+                <ButtonFilter change = {setCurrValue}/>
+                {console.log("resulttttttt", currValue)}
                 <div className={styles.mainLayout}>
                     <div className={styles.left}>
                         {job.map(job => {

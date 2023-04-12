@@ -2,7 +2,7 @@ import styles from "@/styles/job.module.css"
 import { useState, useEffect, useContext, useRef } from "react"
 import axios from "axios"
 
-export default function ButtonFilter(){
+export default function ButtonFilter({change}){
     const [dateButtonToogle, setDateButtonToogle] = useState(false);
     const [experienceButtonToogle, setExperienceButtonToogle] = useState(false);
     const [jobTypeButtonToogle, setJobTypeButtonToogle] = useState(false);
@@ -66,6 +66,16 @@ export default function ButtonFilter(){
         setCurrentOnSite(e.target.value);
     }
 
+    function handleSubmitButton() {
+        const data = {
+            date: currentDate,
+            experience: currentExperience,
+            jobType: currentJobType,
+            onSite: currentOnSite
+        }
+
+        change(data);
+    }
 
     return (
         <div className={styles.buttonList}>
@@ -84,11 +94,12 @@ export default function ButtonFilter(){
                         <li className={styles.listItem}><input type="radio" value="last month" checked={currentDate === "last month"} />
                             Last month
                         </li>
-                        <li className={styles.listItem}><input type="radio" value="any time" checked={currentDate === "any time"} />
+                        <li className={styles.listItem}><input type="radio" value="Any time" checked={currentDate === "Any time"} />
                             Any time
                         </li>
                     </ul>
-                    <button className={styles.submitButton}>Show results</button>
+                    <button className={styles.clearButton} onClick={()=>{setCurrentDate(null)}}>Clear</button>
+                    <button className={styles.submitButton} onClick={handleSubmitButton}>Show results</button>
                 </div>}
             </div>
 
@@ -112,7 +123,9 @@ export default function ButtonFilter(){
                             Senior level
                         </li>
                     </ul>
-                    <button className={styles.submitButton}>Show results</button>
+                    <button className={styles.clearButton} onClick={()=>{setCurrentExperience(null)}}>Clear</button>
+
+                    <button className={styles.submitButton} onClick={handleSubmitButton}>Show results</button>
 
                 </div>}
             </div>
@@ -132,7 +145,9 @@ export default function ButtonFilter(){
                             Internship
                         </li>
                     </ul>
-                    <button className={styles.submitButton}>Show results</button>
+                    <button className={styles.clearButton} onClick={()=>{setCurrentJobType(null)}}>Clear</button>
+
+                    <button className={styles.submitButton} onClick={handleSubmitButton}>Show results</button>
                 </div>}
             </div>
             <div>
@@ -144,12 +159,10 @@ export default function ButtonFilter(){
                         <li className={styles.listItem}><input type="radio" value="On-site" checked={currentOnSite==="On-site"}/>On-site</li>
                         <li className={styles.listItem}><input type="radio" value="Remote" checked={currentOnSite==="Remote"}/>Remote</li>
                     </ul>
-                    <button className={styles.submitButton}>Show results</button>
-
+                    <button className={styles.clearButton} onClick={()=>{setCurrentOnSite(null)}}>Clear</button>
+                    <button className={styles.submitButton} onClick={handleSubmitButton}>Show results</button>
                 </div>}
             </div>
-
-
         </div>
     )
 }
