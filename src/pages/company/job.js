@@ -1,10 +1,13 @@
 import styles from "@/styles/userpage.module.css";
 
-export default function Job({job, key}) {
+export default function Job({ job, key }) {
     return (
         <div className={styles.job}>
             <img
-                src={process.env.NEXT_PUBLIC_API_PIC_URL + job.company.profilePicture}
+                src={
+                    process.env.NEXT_PUBLIC_API_PIC_URL +
+                    job.company.profilePicture
+                }
                 alt={job.company.name}
                 width={48}
                 height={48}

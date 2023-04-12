@@ -44,7 +44,7 @@ export default function company() {
             axios
                 .get(post_url, { params: { companyId: company_id } })
                 .then((res) => {
-                    console.log("posts", res.data)
+                    console.log("posts", res.data);
                     setPosts(res.data);
                 });
         }
@@ -54,9 +54,7 @@ export default function company() {
         router.push("/job/company/" + company.id);
     }
 
-    function handleShowPost() {
-        
-    }
+    function handleShowPost() {}
 
     return (
         <>

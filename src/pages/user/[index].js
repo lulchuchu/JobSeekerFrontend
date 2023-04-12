@@ -24,8 +24,7 @@ export default function User() {
     //Set user information
     useEffect(() => {
         const user_id = parseInt(index);
-        const post_url =
-        process.env.NEXT_PUBLIC_API_POST_URL + "show";
+        const post_url = process.env.NEXT_PUBLIC_API_POST_URL + "show";
         if (token && user_id) {
             if (token.id === user_id) {
                 setIsMyself(true);
@@ -42,18 +41,14 @@ export default function User() {
                     setUserDetail(res.data);
                     setExperience(res.data.jobs);
                 });
-            axios
-                .get(post_url, { params: { userId: user_id } })
-                .then((res) => {
-                    console.log("posts", res.data);
-                    setPosts(res.data);
-                });
+            axios.get(post_url, { params: { userId: user_id } }).then((res) => {
+                console.log("posts", res.data);
+                setPosts(res.data);
+            });
         }
     }, [token, index]);
 
-    function handleShowPost() {
-        
-    }
+    function handleShowPost() {}
 
     return (
         <>
@@ -66,7 +61,7 @@ export default function User() {
                     <div className={styles.mainContent}>
                         <div className={styles.text}>Page posts</div>
                         <div className={styles.mainPost}>
-                            {posts.slice(0,2).map((post) => (
+                            {posts.slice(0, 2).map((post) => (
                                 <Post post={post} key={post.id} />
                             ))}
                         </div>

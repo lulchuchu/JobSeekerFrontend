@@ -1,12 +1,12 @@
 import Jobb from "..";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 
-export default function Company(){
-    const router = useRouter()
+export default function Company() {
+    const router = useRouter();
 
-    const { index } = router.query
+    const { index } = router.query;
 
-    return(
+    return (
         <>
             <Jobb companyId={index} />
         </>

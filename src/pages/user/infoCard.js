@@ -1,38 +1,61 @@
-import { useState } from "react"
-import { useEffect } from "react"
-import axios from "axios"
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
 
-import styles from "@/styles/infocard.module.css"
+import styles from "@/styles/infocard.module.css";
 
 //Phan tren cua trang ca nhan
-export default function InfoCard({userDetail, isMyself}){
+export default function InfoCard({ userDetail, isMyself }) {
     const [isFollowed, setIsFollowed] = useState(false);
     const [token, setToken] = useState(null);
 
     const following_id = userDetail?.id;
 
-    useEffect(() => {setToken(JSON.parse(localStorage.getItem("token")))}, []);
+    useEffect(() => {
+        setToken(JSON.parse(localStorage.getItem("token")));
+    }, []);
 
     useEffect(() => {
-        if(token&&following_id){
-            const result = axios.get(process.env.NEXT_PUBLIC_API_USER_URL + "checkfollow", 
-                {headers: {"Authorization" : `Bearer ${token.accessToken}`} , params: {followId: following_id}})
-                .then((res) => {setIsFollowed(res.data)});
+        if (token && following_id) {
+            const result = axios
+                .get(process.env.NEXT_PUBLIC_API_USER_URL + "checkfollow", {
+                    headers: { Authorization: `Bearer ${token.accessToken}` },
+                    params: { followId: following_id },
+                })
+                .then((res) => {
+                    setIsFollowed(res.data);
+                });
         }
-    },[token,following_id]);
+    }, [token, following_id]);
 
-    function handleClickFollow(){
+    function handleClickFollow() {
         setIsFollowed(!isFollowed);
-        const result = axios.post(process.env.NEXT_PUBLIC_API_USER_URL + "addfollow" +"?followId=" + following_id,
-            {},{headers: {"Authorization" : `Bearer ${token.accessToken}`}},
-           ).data;
-        console.log(isFollowed ? "unfollowed" : "followed" + " user")
+        const result = axios.post(
+            process.env.NEXT_PUBLIC_API_USER_URL +
+                "addfollow" +
+                "?followId=" +
+                following_id,
+            {},
+            { headers: { Authorization: `Bearer ${token.accessToken}` } }
+        ).data;
+        console.log(isFollowed ? "unfollowed" : "followed" + " user");
     }
 
-    return(
+    return (
         <div className={styles.infoCard}>
-            <img className={styles.backGround} src = {process.env.NEXT_PUBLIC_API_PIC_URL+"background.jpg"}></img>
-            <img className = {styles.profilePic} src={process.env.NEXT_PUBLIC_API_PIC_URL+userDetail?.profilePicture} alt={userDetail?.name}/>
+            <img
+                className={styles.backGround}
+                src={
+                    process.env.NEXT_PUBLIC_API_PIC_URL + "background.jpg"
+                }></img>
+            <img
+                className={styles.profilePic}
+                src={
+                    process.env.NEXT_PUBLIC_API_PIC_URL +
+                    userDetail?.profilePicture
+                }
+                alt={userDetail?.name}
+            />
             <div className={styles.mainInfo}>
                 <h1>{userDetail?.name}</h1>
                 <h2>{userDetail?.email}</h2>
@@ -40,17 +63,23 @@ export default function InfoCard({userDetail, isMyself}){
                 <p>{userDetail?.address}</p>
             </div>
             <div>
-                {isMyself&&<div className={styles.buttonOption}>
-                    <button className={styles.button}>Add Profile</button>
-                    <button className={styles.button}>More</button>
-                </div>}
-                {!isMyself&&<div className={styles.buttonOption}>
-                    <button className={styles.button} onClick={handleClickFollow}>
-                        {isFollowed? 'Unfollow':'Follow'}
-                    </button>
-                    <button className={styles.button}> More</button>
-                </div>}
+                {isMyself && (
+                    <div className={styles.buttonOption}>
+                        <button className={styles.button}>Add Profile</button>
+                        <button className={styles.button}>More</button>
+                    </div>
+                )}
+                {!isMyself && (
+                    <div className={styles.buttonOption}>
+                        <button
+                            className={styles.button}
+                            onClick={handleClickFollow}>
+                            {isFollowed ? "Unfollow" : "Follow"}
+                        </button>
+                        <button className={styles.button}> More</button>
+                    </div>
+                )}
             </div>
         </div>
-    )
+    );
 }
