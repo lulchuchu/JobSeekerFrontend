@@ -7,48 +7,72 @@ import styles from "@/styles/userpage.module.css";
 import InfoCard from "./infoCard";
 import Job from "./job";
 import Post from "../home/post";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import PageButton from "./pageButton";
 
 export default function company() {
     const [company, setCompany] = useState(null);
     const [jobs, setJobs] = useState([]);
     const [token, setToken] = useState(null);
     const [posts, setPosts] = useState([]);
+    const [currPagePost, setCurrPagePost] = useState(1);
+    const [currPageJob, setCurrPageJob] = useState(1);
     const router = useRouter();
     const { index } = router.query;
+
+    const itemsPerPage = 2;
+    const company_id = parseInt(index);
+    const company_url = process.env.NEXT_PUBLIC_API_COMPANY_URL + "details";
+    const job_url = process.env.NEXT_PUBLIC_API_JOB_URL + "company";
+    const post_url = process.env.NEXT_PUBLIC_API_POST_URL + "showCompany";
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
+
     useEffect(() => {
-        if (index) {
-            const company_id = parseInt(index);
-            const company_url =
-                process.env.NEXT_PUBLIC_API_COMPANY_URL + "details";
-            const job_url = process.env.NEXT_PUBLIC_API_JOB_URL + "company";
-            const post_url =
-                process.env.NEXT_PUBLIC_API_POST_URL + "showCompany";
-            axios
-                .get(company_url, { params: { companyId: company_id } })
-                .then((res) => {
-                    console.log("company", res.data);
-                    setCompany(res.data);
+        if (company_id) {
+            const resultCompany = async () => {
+                const result = await axios.get(company_url, {
+                    params: { companyId: company_id },
                 });
-
-            axios
-                .get(job_url, { params: { companyId: company_id } })
-                .then((res) => {
-                    console.log("jobs", res.data);
-                    setJobs(res.data);
-                });
-
-            axios
-                .get(post_url, { params: { companyId: company_id } })
-                .then((res) => {
-                    console.log("posts", res.data);
-                    setPosts(res.data);
-                });
+                setCompany(result.data);
+            };
+            resultCompany();
         }
-    }, [index]);
+    }, [company_id]);
+
+    useEffect(() => {
+        if (company_id) {
+            const resultJob = async () => {
+                const result = await axios.get(job_url, {
+                    params: {
+                        companyId: company_id,
+                        page: currPageJob - 1,
+                        size: itemsPerPage,
+                    },
+                });
+                setJobs(result.data.content);
+            };
+            resultJob();
+        }
+    }, [company_id, currPageJob]);
+
+    useEffect(() => {
+        if (company_id) {
+            const resultPost = async () => {
+                const result = await axios.get(post_url, {
+                    params: {
+                        companyId: company_id,
+                        page: currPagePost - 1,
+                        size: itemsPerPage,
+                    },
+                });
+                setPosts(result.data.content);
+            };
+            resultPost();
+        }
+    }, [company_id, currPagePost]);
 
     function handleShowJob() {
         router.push("/job/company/" + company.id);
@@ -69,10 +93,18 @@ export default function company() {
                         )}
                     </div>
                     <div className={styles.mainContent}>
-                        <div className={styles.text}>Page posts</div>
+                        <div className={styles.text}>
+                            <div>Page posts</div>
+                            <PageButton
+                                currPage={currPagePost}
+                                setCurrPage={setCurrPageJob}
+                            />
+                        </div>
                         <div className={styles.mainPost}>
                             {posts.map((post) => (
-                                <Post post={post} key={post.id} />
+                                <div className={styles.smallPost}>
+                                    <Post post={post} key={post.id} />
+                                </div>
                             ))}
                         </div>
                         <button
@@ -82,7 +114,13 @@ export default function company() {
                         </button>
                     </div>
                     <div className={styles.mainContent}>
-                        <h1 className={styles.text}>Job Openning</h1>
+                        <div className={styles.text}>
+                            <div>Job Openning</div>
+                            <PageButton
+                                currPage={currPageJob}
+                                setCurrPage={setCurrPageJob}
+                            />
+                        </div>
                         <div className={styles.mainJob}>
                             {jobs.map((job) => (
                                 <Job job={job} key={job.id} />

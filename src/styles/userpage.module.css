@@ -8,14 +8,14 @@
 }
 
 .main{
-    width: 60%;
+    width: 50%;
     height: 100%; 
-    margin-left:5%;
+    margin-left:10%;
     margin-right:5%;
 }
 
 .side{
-    margin-right:5%;
+    margin-right:10%;
     width: 25%;
     height: 100%;
 
@@ -99,5 +99,20 @@
 
 .info{
 
+}
+
+.paginationButton{
+    margin-top:10px;
+}
+
+.pageButton{
+    margin-right:10px;
+    border-radius: 50%;
+    border: 0px;
+}
+
+.smallPost{
+    width: 49%;
+    margin-right: 10px;
 }
 

@@ -149,7 +149,7 @@ export default function Post({ post }) {
             <div className={styles.buttonLayout}>
                 <button className={styles.button} onClick={handleLikeButton}>
                     {isLiked ? (
-                        <AiTwotoneLike className={styles.icon} size={24} />
+                        <AiTwotoneLike className={styles.icon} size={24} color="#1DA1F2"/>
                     ) : (
                         <AiOutlineLike className={styles.icon} size={24} />
                     )}
