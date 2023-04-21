@@ -20,7 +20,7 @@ export default function Post({ post }) {
     const [token, setToken] = useState(null);
 
     const postId = post.id;
-    const imgs = post.images.split(",");
+    const imgs = post.images ? post.images.split(","):null;
 
     const target = post.user == null ? post.company : post.user;
     const targetUrl =
@@ -132,7 +132,7 @@ export default function Post({ post }) {
             </div>
 
             <p className={styles.content}>{post.content}</p>
-            {imgs.map((img) => (
+            {imgs?.map((img) => (
                 <img
                     src={process.env.NEXT_PUBLIC_API_PIC_URL + img}
                     alt={target.name}

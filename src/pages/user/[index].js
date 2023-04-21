@@ -1,15 +1,15 @@
-import Heading from "../components/heading";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-import styles from "@/styles/userpage.module.css";
+
+import Heading from "../components/heading";
 import Experience from "./experience";
 import InfoCard from "./infoCard";
 import Info from "./info";
 import Post from "../home/post";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import PageButton from "../company/pageButton";
+import styles from "@/styles/userpage.module.css";
+import SideUser from "./sideUser";
 
 export default function User() {
     const router = useRouter();
@@ -20,11 +20,14 @@ export default function User() {
     const [isMyself, setIsMyself] = useState(false);
     const [posts, setPosts] = useState([]);
     const [currPage, setCurrPage] = useState(1);
+    const [following, setFollowing] = useState([]);
+    const [showMoreFollow, setShowMoreFollow] = useState(false);
 
     const itemsPerPage = 2; // number of items to display per page
     const user_id = parseInt(index);
     const post_url = process.env.NEXT_PUBLIC_API_POST_URL + "show";
     const user_url = process.env.NEXT_PUBLIC_API_USER_URL + "details";
+    const follow_url = process.env.NEXT_PUBLIC_API_USER_URL + "following";
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
@@ -37,14 +40,23 @@ export default function User() {
                 setIsMyself(true);
             }
             const resultUser = async () => {
-                const res = await axios.get(user_url, {
+                const resUserDetail = await axios.get(user_url, {
                     headers: { Authorization: `Bearer ${token.accessToken}` },
                     params: { userId: user_id },
                 });
-                setUserDetail(res.data);
-                setExperience(res.data.jobs);
+                setUserDetail(resUserDetail.data);
+                setExperience(resUserDetail.data.jobs);
+            };
+            const resultFollowing = async () => {
+                const resFollowing = await axios.get(follow_url, {
+                    headers: { Authorization: `Bearer ${token.accessToken}` },
+                    params: { userId: user_id },
+                });
+                setFollowing(resFollowing.data);
             };
             resultUser();
+            resultFollowing();
+            console.log("following", following);
         }
     }, [token, user_id]);
 
@@ -76,7 +88,7 @@ export default function User() {
                     {userDetail != null ? <Info info={userDetail.bio} /> : null}
                     <div className={styles.mainContent}>
                         <div className={styles.text}>
-                            <div>Page posts</div>
+                            <div>User posts</div>
                             <PageButton
                                 currPage={currPage}
                                 setCurrPage={setCurrPage}
@@ -103,7 +115,22 @@ export default function User() {
                     </div>
                 </div>
                 <div className={styles.side}>
-                    <div> This is side</div>
+                    <div className={styles.subSide}>
+                        <div className={styles.text}>
+                            People this person following
+                        </div>
+                        {(showMoreFollow
+                            ? following.slice(0, 10)
+                            : following.slice(0, 5)
+                        ).map((user) => (
+                            <SideUser user={user} />
+                        ))}
+                        <button
+                            className={styles.showAll}
+                            onClick={() => setShowMoreFollow(!showMoreFollow)}>
+                            {showMoreFollow ? "Show less" : "Show more"}
+                        </button>
+                    </div>
                 </div>
             </div>
         </>

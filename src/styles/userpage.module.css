@@ -65,7 +65,9 @@
     background-color: white;
     border: 0px;
     font-size: 16px;
-    height:30px
+    height:30px;
+    margin-top:10px;
+    border-radius: 24px;
 }
 
 /* Show Post */
@@ -114,5 +116,47 @@
 .smallPost{
     width: 49%;
     margin-right: 10px;
+}
+
+/* sideUser */
+
+.subSide{
+    color: rgba(0,0,0,0.6);
+    background-color: white;
+    border-radius: 24px;
+    margin-bottom: 20px;
+}
+
+.sideInfo{
+    display: flex;
+    margin: 20px 10px 10px 10px;
+}
+
+.smallProfilePic{
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin: 5px 5px 5px 5px;
+    /* margin: auto; */
+}
+
+
+.sideInfo p{
+    margin: 0px 0px 0px 0px;
+}
+
+.sideInfo h3{
+    margin: 0px 0px 0px 0px;
+    color: black;
+}
+
+.button{
+    /* margin: 10px 10px 10px 10px; */
+    margin-top:10px;
+    width: 80px;
+    border: 0px;
+    border-radius: 24px;
+    height: 30px;
+    border: 1px solid rgba(0,0,0,0.6);
 }
 

@@ -1,14 +1,16 @@
-import Heading from "../components/heading";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-import styles from "@/styles/userpage.module.css";
+
+import Heading from "../components/heading";
 import InfoCard from "./infoCard";
 import Job from "./job";
 import Post from "../home/post";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import PageButton from "./pageButton";
+import SideUser from "../user/sideUser";
+import SideCom from "./sideCompany";
+
+import styles from "@/styles/userpage.module.css";
 
 export default function company() {
     const [company, setCompany] = useState(null);
@@ -17,6 +19,11 @@ export default function company() {
     const [posts, setPosts] = useState([]);
     const [currPagePost, setCurrPagePost] = useState(1);
     const [currPageJob, setCurrPageJob] = useState(1);
+    const [companies, setCompanies] = useState([]);
+    const [showMoreFollow, setShowMoreFollow] = useState(false);
+    const [usersWorked, setUsersWorked] = useState([]);
+    const [showMoreUser, setShowMoreUser] = useState(false);
+
     const router = useRouter();
     const { index } = router.query;
 
@@ -25,22 +32,37 @@ export default function company() {
     const company_url = process.env.NEXT_PUBLIC_API_COMPANY_URL + "details";
     const job_url = process.env.NEXT_PUBLIC_API_JOB_URL + "company";
     const post_url = process.env.NEXT_PUBLIC_API_POST_URL + "showCompany";
+    const random_url = process.env.NEXT_PUBLIC_API_COMPANY_URL + "all";
+    const userWorked_url = process.env.NEXT_PUBLIC_API_USER_URL + "workat";
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
 
     useEffect(() => {
-        if (company_id) {
+        if (token && company_id) {
             const resultCompany = async () => {
                 const result = await axios.get(company_url, {
                     params: { companyId: company_id },
                 });
                 setCompany(result.data);
             };
+            const randomComs = async () => {
+                const result = await axios.get(random_url);
+                setCompanies(result.data);
+            };
+            const userWorked = async () => {
+                const result = await axios.get(userWorked_url, {
+                    headers: { Authorization: `Bearer ${token.accessToken}` },
+                    params: { companyId: company_id },
+                });
+                setUsersWorked(result.data);
+            };
             resultCompany();
+            randomComs();
+            userWorked();
         }
-    }, [company_id]);
+    }, [token, company_id]);
 
     useEffect(() => {
         if (company_id) {
@@ -134,7 +156,36 @@ export default function company() {
                     </div>
                 </div>
                 <div className={styles.side}>
-                    <div> This is side</div>
+                    <div className={styles.subSide}>
+                        <div className={styles.text}>Companies recommend</div>
+                        {(showMoreFollow
+                            ? companies.slice(0, 10)
+                            : companies.slice(0, 5)
+                        ).map((company) => (
+                            <SideCom company={company} />
+                        ))}
+                        <button
+                            className={styles.showAll}
+                            onClick={() => setShowMoreFollow(!showMoreFollow)}>
+                            {showMoreFollow ? "Show less" : "Show more"}
+                        </button>
+                    </div>
+                    <div className={styles.subSide}>
+                        <div className={styles.text}>
+                            People worked there
+                        </div>
+                        {(showMoreUser
+                            ? usersWorked.slice(0, 10)
+                            : usersWorked.slice(0, 5)
+                        ).map((user) => (
+                            <SideUser user={user} />
+                        ))}
+                        <button
+                            className={styles.showAll}
+                            onClick={() => setShowMoreUser(!showMoreUser)}>
+                            {showMoreUser ? "Show less" : "Show more"}
+                        </button>
+                    </div>
                 </div>
             </div>
         </>

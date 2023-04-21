@@ -1,7 +1,5 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import axios from "axios";
-import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/router";
 import Heading from "../components/heading.js";
 import styles from "@/styles/login.module.css";
