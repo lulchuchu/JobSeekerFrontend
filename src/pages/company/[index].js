@@ -23,9 +23,12 @@ export default function company() {
     const [showMoreFollow, setShowMoreFollow] = useState(false);
     const [usersWorked, setUsersWorked] = useState([]);
     const [showMoreUser, setShowMoreUser] = useState(false);
+    const[maxPostPage, setMaxPostPage] = useState(1);
+    const[maxJobPage, setMaxJobPage] = useState(1);
 
     const router = useRouter();
     const { index } = router.query;
+
 
     const itemsPerPage = 2;
     const company_id = parseInt(index);
@@ -74,7 +77,9 @@ export default function company() {
                         size: itemsPerPage,
                     },
                 });
-                setJobs(result.data.content);
+                console.log("result JOBB data" , result.data)
+                
+                setJobs(result.data);
             };
             resultJob();
         }
@@ -90,7 +95,9 @@ export default function company() {
                         size: itemsPerPage,
                     },
                 });
-                setPosts(result.data.content);
+                result.data.totalPages>0 && setMaxPostPage(result.data.totalPages)
+                console.log("result.data", result.data)
+                setPosts(result.data);
             };
             resultPost();
         }
@@ -117,13 +124,15 @@ export default function company() {
                     <div className={styles.mainContent}>
                         <div className={styles.text}>
                             <div>Page posts</div>
+                            {console.log("post", posts)}
                             <PageButton
                                 currPage={currPagePost}
-                                setCurrPage={setCurrPageJob}
+                                setCurrPage={setCurrPagePost}
+                                maxPage={posts.totalPages}
                             />
                         </div>
                         <div className={styles.mainPost}>
-                            {posts.map((post) => (
+                            {posts.content?.map((post) => (
                                 <div className={styles.smallPost}>
                                     <Post post={post} key={post.id} />
                                 </div>
@@ -141,10 +150,11 @@ export default function company() {
                             <PageButton
                                 currPage={currPageJob}
                                 setCurrPage={setCurrPageJob}
+                                maxPage={jobs.totalPages}
                             />
                         </div>
                         <div className={styles.mainJob}>
-                            {jobs.map((job) => (
+                            {jobs.content?.map((job) => (
                                 <Job job={job} key={job.id} />
                             ))}
                         </div>

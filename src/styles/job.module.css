@@ -62,7 +62,7 @@
 
 /* details */
 .detail {
-    width: 60%;
+    width: 67%;
     margin-left: 20px;
     border-radius: 10px;
     border: 1px solid #e6e6e6;
@@ -157,4 +157,26 @@
     height: 30px;
     margin-left: 30px;
     border: 1px solid;
+}
+
+.paginationButton{
+    margin-top:10px;
+    color: black;
+    background-color: white;
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.activePageinationButton{
+    margin-top:10px;
+    background-color: #1da1f2;
+    color: white;
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+
+
 }

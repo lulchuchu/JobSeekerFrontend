@@ -22,6 +22,7 @@ export default function User() {
     const [currPage, setCurrPage] = useState(1);
     const [following, setFollowing] = useState([]);
     const [showMoreFollow, setShowMoreFollow] = useState(false);
+    const [maxPostPage, setMaxPostPage] = useState(1);
 
     const itemsPerPage = 2; // number of items to display per page
     const user_id = parseInt(index);
@@ -70,6 +71,7 @@ export default function User() {
                         size: itemsPerPage,
                     },
                 });
+                result.data.totalPages>0&&setMaxPostPage(result.data.totalPages);
                 setPosts(result.data.content);
             };
             fetchPostsByUser();
@@ -77,6 +79,7 @@ export default function User() {
     }, [token, user_id, currPage]);
 
     function handleShowPost() {}
+
 
     console.log("currPage", currPage);
     return (
@@ -92,6 +95,7 @@ export default function User() {
                             <PageButton
                                 currPage={currPage}
                                 setCurrPage={setCurrPage}
+                                maxPage={maxPostPage}
                             />
                         </div>
                         <div className={styles.mainPost}>

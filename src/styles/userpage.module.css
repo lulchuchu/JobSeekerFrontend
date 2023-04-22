@@ -10,15 +10,14 @@
 .main{
     width: 50%;
     height: 100%; 
-    margin-left:10%;
+    margin-left:15%;
     margin-right:5%;
 }
 
 .side{
-    margin-right:10%;
-    width: 25%;
+    margin-right:15%;
+    width: 20%;
     height: 100%;
-
 }
 
 .mainContent{
@@ -33,7 +32,7 @@
     position: relative;
     top:10px;
     left:20px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
 }
 
@@ -158,5 +157,9 @@
     border-radius: 24px;
     height: 30px;
     border: 1px solid rgba(0,0,0,0.6);
+}
+
+.paginationButton{
+    margin-top:10px;
 }
 

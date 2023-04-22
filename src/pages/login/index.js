@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Heading from "../components/heading.js";
@@ -7,9 +7,17 @@ import styles from "@/styles/login.module.css";
 export default function login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [token, setToken] = useState("");
+    const [token, setToken] = useState(null);
     const [name, setName] = useState("");
     const router = useRouter();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (token) {
+            setToken(token);
+            router.push("/home");
+        }
+    })
 
     const sendLogin = async (event) => {
         event.preventDefault();

@@ -2,7 +2,7 @@ import styles from "@/styles/job.module.css";
 import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 
-export default function ButtonFilter({ companyId, change }) {
+export default function ButtonFilter({ companyId, changeFilter , changeResult}) {
     const [dateButtonToogle, setDateButtonToogle] = useState(false);
     const [experienceButtonToogle, setExperienceButtonToogle] = useState(false);
     const [jobTypeButtonToogle, setJobTypeButtonToogle] = useState(false);
@@ -73,9 +73,12 @@ export default function ButtonFilter({ companyId, change }) {
             experience: currentExperience,
             jobType: currentJobType,
             onSite: currentOnSite,
+            currPage: 1,
+            numberPerPage: 10
         };
 
-        change(data);
+        changeFilter(data);
+        changeResult(null);
     }
 
     return (
