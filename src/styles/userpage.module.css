@@ -157,9 +157,7 @@
     border-radius: 24px;
     height: 30px;
     border: 1px solid rgba(0,0,0,0.6);
+    /* border: 1px solid rgba(0,0,0,0.6); */
 }
 
-.paginationButton{
-    margin-top:10px;
-}
 

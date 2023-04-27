@@ -5,17 +5,16 @@ import { useState, useRef } from "react";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { IoSend } from "react-icons/io5";
 
-export default function CreatePost({ token }) {
+export default function CreatePost({ token, setCreatePostShowing, photos }) {
     const userId = token.id;
     const profilePicture = token.profilePicture;
     const [content, setContent] = useState("");
-    const [images, setImages] = useState("");
     const ref = useRef(null);
 
-    function handleSendClick() {
+    function handleSendClick({}) {
         const data = {
             content: content,
-            images: images,
+            images: photos,
         };
 
         const post = async () => {
@@ -55,7 +54,7 @@ export default function CreatePost({ token }) {
                     </div>
                 </Link>
             </div>
-            <button className={styles.button}>
+            <button className={styles.button} onClick={() => setCreatePostShowing(true)}>
                 <HiOutlinePhotograph className={styles.icon} size={24} />
                 <p className={styles.buttonText}>Add a photo</p>
             </button>

@@ -10,6 +10,8 @@ import Post from "../home/post";
 import PageButton from "../company/pageButton";
 import styles from "@/styles/userpage.module.css";
 import SideUser from "./sideUser";
+import EditUser from "./editUser";
+import UploadFile from "./uploadFile";
 
 export default function User() {
     const router = useRouter();
@@ -23,6 +25,10 @@ export default function User() {
     const [following, setFollowing] = useState([]);
     const [showMoreFollow, setShowMoreFollow] = useState(false);
     const [maxPostPage, setMaxPostPage] = useState(1);
+
+    const [editShowing, setEditShowing] = useState(false);
+    const [uploadShowing, setUploadShowing] = useState(false);
+    const [uploadPic, setUploadPic] = useState(false);
 
     const itemsPerPage = 2; // number of items to display per page
     const user_id = parseInt(index);
@@ -71,7 +77,8 @@ export default function User() {
                         size: itemsPerPage,
                     },
                 });
-                result.data.totalPages>0&&setMaxPostPage(result.data.totalPages);
+                result.data.totalPages > 0 &&
+                    setMaxPostPage(result.data.totalPages);
                 setPosts(result.data.content);
             };
             fetchPostsByUser();
@@ -80,14 +87,25 @@ export default function User() {
 
     function handleShowPost() {}
 
-
-    console.log("currPage", currPage);
     return (
         <>
+            {editShowing && isMyself && (
+                <EditUser userDetail={userDetail} setEdit={setEditShowing} />
+            )}
+            {uploadShowing && isMyself && <UploadFile setUpload = {setUploadShowing} />}
+            {uploadPic && isMyself && <UploadFile setUpload = {setUploadPic} isProfilePic = {true}/>}
+
             <Heading />
             <div className={styles.all}>
                 <div className={styles.main}>
-                    <InfoCard userDetail={userDetail} isMyself={isMyself} />
+                    {/* User profile */}
+                    <InfoCard
+                        userDetail={userDetail}
+                        isMyself={isMyself}
+                        setEdit={setEditShowing}
+                        setUpload={setUploadShowing}
+                        setProfilePic={setUploadPic}
+                    />
                     {userDetail != null ? <Info info={userDetail.bio} /> : null}
                     <div className={styles.mainContent}>
                         <div className={styles.text}>
@@ -137,6 +155,8 @@ export default function User() {
                     </div>
                 </div>
             </div>
+
+            {/* Edit profile */}
         </>
     );
 }

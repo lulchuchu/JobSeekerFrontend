@@ -41,22 +41,7 @@ export default function login() {
 
     const sendRegister = async (event) => {
         event.preventDefault();
-        const data = {
-            username: username,
-            password: password,
-        };
-        try {
-            const loginUrl = process.env.NEXT_PUBLIC_API_LOGIN_URL;
-            const resultLogin = (await axios.post(loginUrl, data)).data;
-            console.log("resultLogin", resultLogin);
-            setToken(resultLogin.accessToken);
-            localStorage.setItem("token", JSON.stringify(resultLogin));
-            // localStorage.setItem("user", resultLogin.name)
-            router.push("/home");
-        } catch (error) {
-            const responseErr = error.response.data;
-            alert(responseErr);
-        }
+        router.push('/register')
     };
 
     return (
@@ -124,13 +109,13 @@ export default function login() {
                             className={styles.button}
                             type="submit"
                             value="New? Join now"
-                            onClick={sendLogin}
+                            onClick={sendRegister}
                         />
                     </form>
                 </div>
 
                 {/* Picture */}
-                <img src="pics/Work_from_home.jpg" width={700} height={700} />
+                <img src="pics/work.svg" width={700} height={700} />
             </div>
         </>
     );

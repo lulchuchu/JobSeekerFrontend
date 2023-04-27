@@ -10,6 +10,9 @@
     margin-right: 20%;
 }
 
+.left{
+    width: 35%;
+}
 /* button list */
 .buttonList {
     display: flex;
@@ -62,7 +65,7 @@
 
 /* details */
 .detail {
-    width: 67%;
+    width: 63%;
     margin-left: 20px;
     border-radius: 10px;
     border: 1px solid #e6e6e6;

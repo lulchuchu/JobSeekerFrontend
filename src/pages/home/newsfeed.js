@@ -5,10 +5,15 @@ import styles from "@/styles/home.module.css";
 
 import Post from "./post";
 import CreatePost from "./createPost";
+import UploadFile from "../user/uploadFile";
+import UploadPics from "./uploadPics";
 
 export default function Newsfeed() {
     const [token, setToken] = useState(null);
     const [news, setNews] = useState([]);
+    const [photos, setPhotos] = useState(''); // [1
+    const [createPostShowing, setCreatePostShowing] = useState(false); // [1
+
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
@@ -31,8 +36,9 @@ export default function Newsfeed() {
 
     return (
         <>
+            {createPostShowing && <UploadPics setUpload={setCreatePostShowing} setPhotos = {setPhotos} photos = {photos}/>}
             <div className={styles.mainLayout}>
-                {token && <CreatePost token={token} />}
+                {token && <CreatePost token={token} setCreatePostShowing = {setCreatePostShowing} photos = {photos}/>}
                 {/* Newsfeed */}
                 {token &&
                     news.map((post) => (

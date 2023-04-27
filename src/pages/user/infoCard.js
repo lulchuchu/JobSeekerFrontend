@@ -4,10 +4,15 @@ import axios from "axios";
 import styles from "@/styles/infocard.module.css";
 
 //Phan tren cua trang ca nhan
-export default function InfoCard({ userDetail, isMyself }) {
+export default function InfoCard({
+    userDetail,
+    isMyself,
+    setEdit,
+    setUpload,
+    setProfilePic
+}) {
     const [isFollowed, setIsFollowed] = useState(false);
     const [token, setToken] = useState(null);
-
     const following_id = userDetail?.id;
 
     useEffect(() => {
@@ -40,6 +45,16 @@ export default function InfoCard({ userDetail, isMyself }) {
         console.log(isFollowed ? "unfollowed" : "followed" + " user");
     }
 
+    function handleAddProfile() {
+        console.log("add profile clicked");
+        setEdit(true);
+    }
+
+    function handleUploadFile() {
+        console.log("upload file clicked");
+        setUpload(true);
+    }
+
     return (
         <div className={styles.infoCard}>
             <img
@@ -54,6 +69,7 @@ export default function InfoCard({ userDetail, isMyself }) {
                     userDetail?.profilePicture
                 }
                 alt={userDetail?.name}
+                onClick={() => setProfilePic(true)}
             />
             <div className={styles.mainInfo}>
                 <h1>{userDetail?.name}</h1>
@@ -64,8 +80,16 @@ export default function InfoCard({ userDetail, isMyself }) {
             <div>
                 {isMyself && (
                     <div className={styles.buttonOption}>
-                        <button className={styles.button}>Add Profile</button>
-                        <button className={styles.button}>More</button>
+                        <button
+                            className={styles.button}
+                            onClick={handleAddProfile}>
+                            Add Profile
+                        </button>
+                        <button
+                            className={styles.button}
+                            onClick={handleUploadFile}>
+                            Upload CV
+                        </button>
                     </div>
                 )}
                 {!isMyself && (

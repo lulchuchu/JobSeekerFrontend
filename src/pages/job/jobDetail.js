@@ -1,20 +1,23 @@
 import styles from "@/styles/job.module.css";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import { RiShareBoxLine } from "react-icons/ri";
-import company from "../company/[index]";
 
 export default function JobDetail({ job }) {
     const [token, setToken] = useState(null);
     const [isApplied, setIsApplied] = useState(false);
+    const router = useRouter();
     const jobId = job.id;
+
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
 
+    // Check apply status
     useEffect(() => {
         if (token && jobId) {
             const isApplied = async () => {
@@ -35,19 +38,25 @@ export default function JobDetail({ job }) {
     }, [token, jobId]);
 
     function handleClickApply() {
-        const apply = async () => {
-            const res = await axios.post(
-                process.env.NEXT_PUBLIC_API_JOB_URL +
-                    "apply" +
-                    "?applicationId=" +
-                    jobId,
-                {},
-                { headers: { Authorization: `Bearer ${token.accessToken}` } }
-            );
-            console.log("data is ", res.data);
-        };
-        apply();
-        setIsApplied(!isApplied);
+        if(!token){
+            alert("Please login to apply");
+            router.push("/login");
+        }else{
+            const apply = async () => {
+                const res = await axios.post(
+                    process.env.NEXT_PUBLIC_API_JOB_URL +
+                        "apply" +
+                        "?applicationId=" +
+                        jobId,
+                    {},
+                    { headers: { Authorization: `Bearer ${token.accessToken}` } }
+                );
+                console.log("data is ", res.data);
+            };
+            apply();
+            setIsApplied(!isApplied);
+
+        }
     }
 
     return (

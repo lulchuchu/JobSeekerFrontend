@@ -6,15 +6,19 @@ import Heading from "../components/heading";
 import Job from "./jobInfo";
 import JobDetail from "./jobDetail";
 import ButtonFilter from "./buttonFilter";
+import useApiRequest from "../components/getRequest";
 
 export default function Jobb({ companyId, totalPage }) {
     const numberPerPage = 10;
-
+    //List of all jobs per page
     const [job, setJob] = useState([]);
+    //Current job details
     const [currentJob, setCurrentJob] = useState(null);
     const [currPagee, setCurrPage] = useState(1);
+    //List of page number
     const pageNum = [];
 
+    //Data to send request filter
     const [currValue, setCurrValue] = useState({
         companyId: companyId,
         date: null,
@@ -25,6 +29,12 @@ export default function Jobb({ companyId, totalPage }) {
         numberPerPage: numberPerPage,
     });
 
+    // const {data} = useApiRequest(process.env.NEXT_PUBLIC_API_JOB_URL + "all", currValue);
+    // useEffect(() => {
+    //     setJob(data);
+    // }, [job])
+
+    //Fetch jobs list data
     useEffect(() => {
         console.log("currValll", currValue);
         const fetchData = async () => {
@@ -39,6 +49,7 @@ export default function Jobb({ companyId, totalPage }) {
         fetchData();
     }, [currValue]);
 
+    //Make list of page number
     for (let i = 0; i < job.totalPages; i++) {
         pageNum.push(i + 1);
     }
@@ -48,13 +59,17 @@ export default function Jobb({ companyId, totalPage }) {
         <>
             <Heading />
             <div className={styles.layout}>
+                {/* Filter Button */}
                 <ButtonFilter
                     changeFilter={setCurrValue}
                     changeResult={setCurrentJob}
                     companyId={companyId}
                 />
+                {/* Main Layout */}
                 <div className={styles.mainLayout}>
+                    {/* List of jobs */}
                     <div className={styles.left}>
+                        {/* Map List of job to Job component */}
                         {job.content?.map((job) => {
                             return (
                                 <div
@@ -65,6 +80,7 @@ export default function Jobb({ companyId, totalPage }) {
                                 </div>
                             );
                         })}
+                        {/* Pagination */}
                         <div className={styles.pagination}>
                             {pageNum.map((page) => {
                                 console.log("page", page)
@@ -77,7 +93,6 @@ export default function Jobb({ companyId, totalPage }) {
                                             : styles.paginationButton
                                     }
                                     onClick={() => {
-
                                         setCurrValue({
                                             ...currValue,
                                             currPage: page - 1,
@@ -88,6 +103,8 @@ export default function Jobb({ companyId, totalPage }) {
                             )})}
                         </div>
                     </div>
+
+                    {/* If currentJob is clicked show job Detail */}
                     {currentJob && <JobDetail job={currentJob} />}
                 </div>
             </div>

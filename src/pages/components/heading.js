@@ -13,6 +13,7 @@ import styles from "@/styles/heading.module.css";
 
 export default function Heading() {
     const [token, setToken] = useState(null);
+
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
@@ -48,26 +49,29 @@ export default function Heading() {
                     />
                 )}
                 {token ? (
-                    <NavBarIcon
-                        token={token}
-                        url="/user"
-                        component={
-                            <img
-                                className={styles.profilePicture}
-                                alt="profile-icon"
-                                src={
-                                    process.env.NEXT_PUBLIC_API_PIC_URL +
-                                    token.profilePicture
-                                }
-                                width={30}
-                                height={30}></img>
-                        }
-                        name="Profile"
-                    />
+                    <>
+                        <NavBarIcon
+                            token={token}
+                            url="/user"
+                            component={
+                                <img
+                                    className={styles.profilePicture}
+                                    alt="profile-icon"
+                                    src={
+                                        process.env.NEXT_PUBLIC_API_PIC_URL +
+                                        token.profilePicture
+                                    }
+                                    width={30}
+                                    height={30}></img>
+                            }
+                            name="Profile"
+                        />                
+                    </>
+
                 ) : (
                     <NavBarIcon
                         url="/login"
-                        component={<FiLogIn size={24} />}
+                        component={<FiLogIn size={30} />}
                         name="Login"
                     />
                 )}
