@@ -3,9 +3,10 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import styles from "@/styles/home.module.css";
 
-export default function UploadPics({ setUpload, setPhotos, setFiles}) {
+export default function UploadPics({ setUpload, setPhotos, setFiles }) {
     const [token, setToken] = useState(null);
     // const [files, setFiles] = useState(null);
+    //Link of photos source
     const [lstPhoto, setLstPhoto] = useState([]);
 
     const router = useRouter();
@@ -15,29 +16,14 @@ export default function UploadPics({ setUpload, setPhotos, setFiles}) {
 
     function handleUpload(e) {
         let formData = new FormData();
-        let tmp = [];
+        // Link of photos source
         const images = [],
+            // File reader to read file
             fileReaders = [];
+        // File received from input
         const filesUpload = e.target.files;
 
-        console.log("fileUpload", filesUpload);
-
-        // if (filesUpload.length > 0) {
-        //     filesUpload.map((file) => {
-        //         const fileReader = new FileReader();
-        //         fileReaders.push(fileReader);
-        //         fileReader.onload = (e) => {
-        //             const result = e.target.result;
-        //             if (result) {
-        //                 images.push(result);
-        //             }
-        //         };
-        //         setLstPhoto(images);
-        //         fileReader.readAsDataURL(file);
-        //     });
-        // }
-
-        console.log("filesUpload", filesUpload);
+        //Loop through all files upload from input
         for (let i = 0; i < filesUpload.length; i++) {
             const fileReader = new FileReader();
             fileReaders.push(fileReader);
@@ -47,42 +33,18 @@ export default function UploadPics({ setUpload, setPhotos, setFiles}) {
                     images.push(result);
                 }
                 if (images.length === filesUpload.length) {
-                    // setImages(images);
                     setLstPhoto(images);
                     setPhotos(images);
-
                 }
             };
             console.log("fileee", filesUpload[i]);
             fileReader.readAsDataURL(filesUpload[i]);
-            // tmp.push(filesUpload[i].name);
             formData.append("files", filesUpload[i]);
         }
-        // setLstPhoto(tmp);
-        // filesUpload.FileList.map((file) => formData.append("files", file));
-        // formData.append("files", filesUpload);
         setFiles(formData);
     }
 
     function handleConfirm() {
-        // const fetchData = async () => {
-        //     const result = await axios.post(
-        //         process.env.NEXT_PUBLIC_API_FILE_URL + "upload",
-        //         files,
-        //         {
-        //             headers: {
-        //                 Authorization:
-        //                     "Bearer " +
-        //                     JSON.parse(localStorage.getItem("token"))
-        //                         .accessToken,
-        //             },
-        //         }
-        //     );
-        //     console.log("result", result.data);
-        //     setPhotoNames(result.data);
-        // };
-
-        // fetchData();
         setUpload(false);
     }
 
@@ -100,13 +62,10 @@ export default function UploadPics({ setUpload, setPhotos, setFiles}) {
                 </div>
 
                 <div className={styles.files}>
-                    Choose a picture to set as your profile picture
+                    Choose a picture for your post
                     <br />
                     <br />
                     {lstPhoto?.map((photo) => (
-                        // <img src = {process.env.NEXT_PUBLIC_API_FILE_URL + 'getImage?path='+photo}
-                        // width={100}
-                        // height={100}/>
                         <img src={photo} width={100} height={100} />
                     ))}
                 </div>

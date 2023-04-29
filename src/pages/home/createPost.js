@@ -5,16 +5,24 @@ import { useState, useRef } from "react";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { IoSend } from "react-icons/io5";
 
-export default function CreatePost({ token, setCreatePostShowing, photos,files }) {
+export default function CreatePost({
+    token,
+    setCreatePostShowing,
+    photos,
+    files,
+}) {
     const userId = token.id;
     const profilePicture = token.profilePicture;
+    //Content of post
     const [content, setContent] = useState("");
+    //String represent photos name
     const [photosName, setPhotoNames] = useState("");
+    //Showing photo status
+    const [showingPhoto, setShowingPhoto] = useState(true); // [1
     const ref = useRef(null);
 
-
     function handleSendClick() {
-
+        //Upload photos
         const fetchData = async () => {
             const result = await axios.post(
                 process.env.NEXT_PUBLIC_API_FILE_URL + "upload",
@@ -29,25 +37,33 @@ export default function CreatePost({ token, setCreatePostShowing, photos,files }
                 }
             );
             console.log("result", result.data);
+            
+            // setPhotoNames(result.data);
 
             const data = {
                 content: content,
                 images: result.data,
             };
-    
+
+            //Create new Post with photos
             const post = async () => {
                 console.log("content in post is " + content);
                 const result = axios.post(
                     process.env.NEXT_PUBLIC_API_POST_URL + "create",
                     data,
-                    { headers: { Authorization: `Bearer ${token.accessToken}` } }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token.accessToken}`,
+                        },
+                    }
                 );
                 console.log(result.data);
                 alert(result.data);
             };
             ref.current.value = "";
+            setShowingPhoto(false);
             post();
-            // setPhotoNames(result.data);
+
         };
 
         fetchData();
@@ -90,7 +106,7 @@ export default function CreatePost({ token, setCreatePostShowing, photos,files }
                     ref={ref}
                     placeholder="Start a post"
                     onChange={(e) => setContent(e.target.value)}></input>
-                
+
                 <Link href="">
                     <div onClick={handleSendClick}>
                         <IoSend className={styles.sendIcon} size={24} />
@@ -98,9 +114,17 @@ export default function CreatePost({ token, setCreatePostShowing, photos,files }
                 </Link>
             </div>
 
-            {photos && photos.map((photo) => <img src={photo} width={200} height={200}/>)}
+            <div>
+                {showingPhoto &&
+                    photos &&
+                    photos.map((photo) => (
+                        <img src={photo} width={200} height={200} />
+                    ))}
+            </div>
 
-            <button className={styles.button} onClick={() => setCreatePostShowing(true)}>
+            <button
+                className={styles.button}
+                onClick={() => setCreatePostShowing(true)}>
                 <HiOutlinePhotograph className={styles.icon} size={24} />
                 <p className={styles.buttonText}>Add a photo</p>
             </button>

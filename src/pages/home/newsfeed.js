@@ -10,12 +10,16 @@ import UploadPics from "./uploadPics";
 
 export default function Newsfeed() {
     const [token, setToken] = useState(null);
+    //Newsfeed data
     const [news, setNews] = useState([]);
+    //Photos link to show in post
     const [photos, setPhotos] = useState();
+    // String represent photos name
     const [photoNames, setPhotoNames] = useState("");
-    const [createPostShowing, setCreatePostShowing] = useState(false); // [1
+    //Show popUp upload image
+    const [createPostShowing, setCreatePostShowing] = useState(false);
+    //File content to send to server
     const [files, setFiles] = useState(null);
-
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
@@ -42,8 +46,7 @@ export default function Newsfeed() {
                 <UploadPics
                     setUpload={setCreatePostShowing}
                     setPhotos={setPhotos}
-                    // setPhotoNames={setPhotoNames}
-                    setFiles = {setFiles}
+                    setFiles={setFiles}
                 />
             )}
             <div className={styles.mainLayout}>
@@ -52,8 +55,7 @@ export default function Newsfeed() {
                         token={token}
                         setCreatePostShowing={setCreatePostShowing}
                         photos={photos}
-                        // photosName={photoNames}
-                        files = {files}
+                        files={files}
                     />
                 )}
                 {/* Newsfeed */}

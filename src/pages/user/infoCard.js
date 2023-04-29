@@ -9,7 +9,7 @@ export default function InfoCard({
     isMyself,
     setEdit,
     setUpload,
-    setProfilePic
+    setProfilePic,
 }) {
     const [isFollowed, setIsFollowed] = useState(false);
     const [token, setToken] = useState(null);
