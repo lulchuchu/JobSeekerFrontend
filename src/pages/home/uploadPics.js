@@ -3,9 +3,9 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import styles from "@/styles/home.module.css";
 
-export default function UploadPics({ setUpload, setPhotos,photos }) {
+export default function UploadPics({ setUpload, setPhotos, setFiles}) {
     const [token, setToken] = useState(null);
-    const [files, setFiles] = useState(null);
+    // const [files, setFiles] = useState(null);
     const [lstPhoto, setLstPhoto] = useState([]);
 
     const router = useRouter();
@@ -16,39 +16,73 @@ export default function UploadPics({ setUpload, setPhotos,photos }) {
     function handleUpload(e) {
         let formData = new FormData();
         let tmp = [];
+        const images = [],
+            fileReaders = [];
         const filesUpload = e.target.files;
+
+        console.log("fileUpload", filesUpload);
+
+        // if (filesUpload.length > 0) {
+        //     filesUpload.map((file) => {
+        //         const fileReader = new FileReader();
+        //         fileReaders.push(fileReader);
+        //         fileReader.onload = (e) => {
+        //             const result = e.target.result;
+        //             if (result) {
+        //                 images.push(result);
+        //             }
+        //         };
+        //         setLstPhoto(images);
+        //         fileReader.readAsDataURL(file);
+        //     });
+        // }
+
         console.log("filesUpload", filesUpload);
         for (let i = 0; i < filesUpload.length; i++) {
+            const fileReader = new FileReader();
+            fileReaders.push(fileReader);
+            fileReader.onload = (e) => {
+                const { result } = e.target;
+                if (result) {
+                    images.push(result);
+                }
+                if (images.length === filesUpload.length) {
+                    // setImages(images);
+                    setLstPhoto(images);
+                    setPhotos(images);
+
+                }
+            };
             console.log("fileee", filesUpload[i]);
-            tmp.push(filesUpload[i].name);
+            fileReader.readAsDataURL(filesUpload[i]);
+            // tmp.push(filesUpload[i].name);
             formData.append("files", filesUpload[i]);
         }
-        setLstPhoto(tmp);
+        // setLstPhoto(tmp);
         // filesUpload.FileList.map((file) => formData.append("files", file));
         // formData.append("files", filesUpload);
         setFiles(formData);
     }
 
     function handleConfirm() {
-        const fetchData = async () => {
-            const result = await axios.post(
-                process.env.NEXT_PUBLIC_API_FILE_URL + "upload",
-                files,
-                {
-                    headers: {
-                        Authorization:
-                            "Bearer " +
-                            JSON.parse(localStorage.getItem("token"))
-                                .accessToken,
-                    },
-                }
-            );
-            console.log("result", result.data);
-            setPhotos(result.data);
+        // const fetchData = async () => {
+        //     const result = await axios.post(
+        //         process.env.NEXT_PUBLIC_API_FILE_URL + "upload",
+        //         files,
+        //         {
+        //             headers: {
+        //                 Authorization:
+        //                     "Bearer " +
+        //                     JSON.parse(localStorage.getItem("token"))
+        //                         .accessToken,
+        //             },
+        //         }
+        //     );
+        //     console.log("result", result.data);
+        //     setPhotoNames(result.data);
+        // };
 
-        };
-
-        fetchData();
+        // fetchData();
         setUpload(false);
     }
 
@@ -70,9 +104,10 @@ export default function UploadPics({ setUpload, setPhotos,photos }) {
                     <br />
                     <br />
                     {lstPhoto?.map((photo) => (
-                        <img src = {process.env.NEXT_PUBLIC_API_FILE_URL + 'getImage?path='+photo}
-                        width={100}
-                        height={100}/>
+                        // <img src = {process.env.NEXT_PUBLIC_API_FILE_URL + 'getImage?path='+photo}
+                        // width={100}
+                        // height={100}/>
+                        <img src={photo} width={100} height={100} />
                     ))}
                 </div>
 

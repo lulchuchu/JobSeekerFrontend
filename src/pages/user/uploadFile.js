@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 export default function UploadFile({ setUpload, isProfilePic = false }) {
     const [token, setToken] = useState(null);
     const [files, setFiles] = useState(null);
+    const [imgSrc, setImgSrc] = useState(null);
 
     const router = useRouter();
     useEffect(() => {
@@ -15,10 +16,15 @@ export default function UploadFile({ setUpload, isProfilePic = false }) {
     function handleUpload(e) {
         const file = e.target.files[0];
         let formData = new FormData();
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            setImgSrc(event.target.result);
+        };
+        reader.readAsDataURL(file)
         formData.append("files", file);
         setFiles(formData);
+        setImgSrc()
         console.log(file.name);
-        // console.log(files.map((file) => console.log(file.name)));
     }
 
     function handleConfirm() {
@@ -34,27 +40,33 @@ export default function UploadFile({ setUpload, isProfilePic = false }) {
             }
         ).data;
 
-        if(isProfilePic) {
+        if (isProfilePic) {
             const update = axios.post(
-                process.env.NEXT_PUBLIC_API_USER_URL + "changeProfilePicture?path=" + files.get("files").name,
+                process.env.NEXT_PUBLIC_API_USER_URL +
+                    "changeProfilePicture?path=" +
+                    files.get("files").name,
                 {},
                 {
                     headers: {
                         Authorization:
                             "Bearer " +
-                            JSON.parse(localStorage.getItem("token")).accessToken,
+                            JSON.parse(localStorage.getItem("token"))
+                                .accessToken,
                     },
                 }
             ).data;
-        }else{
+        } else {
             const update = axios.post(
-                process.env.NEXT_PUBLIC_API_USER_URL + "changeCV?path=" + files.get("files").name,
+                process.env.NEXT_PUBLIC_API_USER_URL +
+                    "changeCV?path=" +
+                    files.get("files").name,
                 {},
                 {
                     headers: {
                         Authorization:
                             "Bearer " +
-                            JSON.parse(localStorage.getItem("token")).accessToken,
+                            JSON.parse(localStorage.getItem("token"))
+                                .accessToken,
                     },
                 }
             ).data;
@@ -62,6 +74,8 @@ export default function UploadFile({ setUpload, isProfilePic = false }) {
         alert("Upload file successfully");
         router.reload();
     }
+
+    console.log("imgsrc", imgSrc)
 
     return (
         <div className={styles.fixed}>
@@ -77,20 +91,21 @@ export default function UploadFile({ setUpload, isProfilePic = false }) {
                 </div>
                 {isProfilePic ? (
                     <div>
-                        Choose a picture to set as your profile picture 
-                        <br/>
-                        <br/>
-                        {files?.get("files") && <img
-                            src={
-                                process.env.NEXT_PUBLIC_API_FILE_URL +
-                                "getImage?path=" +
-                                files.get("files").name
-                                
-                            }
-                            width={500}
-                            height={500}
-
-                        />}
+                        Choose a picture to set as your profile picture
+                        <br />
+                        <br />
+                        {files?.get("files") && (
+                            <img
+                                // src={
+                                //     process.env.NEXT_PUBLIC_API_FILE_URL +
+                                //     "getImage?path=" +
+                                //     files.get("files").name
+                                // }
+                                src={imgSrc}
+                                width={400}
+                                height={400}
+                            />
+                        )}
                     </div>
                 ) : (
                     <div className={styles.files}>

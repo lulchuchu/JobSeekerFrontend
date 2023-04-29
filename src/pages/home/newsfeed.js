@@ -11,8 +11,10 @@ import UploadPics from "./uploadPics";
 export default function Newsfeed() {
     const [token, setToken] = useState(null);
     const [news, setNews] = useState([]);
-    const [photos, setPhotos] = useState(''); // [1
+    const [photos, setPhotos] = useState();
+    const [photoNames, setPhotoNames] = useState("");
     const [createPostShowing, setCreatePostShowing] = useState(false); // [1
+    const [files, setFiles] = useState(null);
 
 
     useEffect(() => {
@@ -36,9 +38,24 @@ export default function Newsfeed() {
 
     return (
         <>
-            {createPostShowing && <UploadPics setUpload={setCreatePostShowing} setPhotos = {setPhotos} photos = {photos}/>}
+            {createPostShowing && (
+                <UploadPics
+                    setUpload={setCreatePostShowing}
+                    setPhotos={setPhotos}
+                    // setPhotoNames={setPhotoNames}
+                    setFiles = {setFiles}
+                />
+            )}
             <div className={styles.mainLayout}>
-                {token && <CreatePost token={token} setCreatePostShowing = {setCreatePostShowing} photos = {photos}/>}
+                {token && (
+                    <CreatePost
+                        token={token}
+                        setCreatePostShowing={setCreatePostShowing}
+                        photos={photos}
+                        // photosName={photoNames}
+                        files = {files}
+                    />
+                )}
                 {/* Newsfeed */}
                 {token &&
                     news.map((post) => (
