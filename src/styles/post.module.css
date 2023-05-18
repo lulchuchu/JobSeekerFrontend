@@ -74,6 +74,13 @@
 
 .buttonText{
     margin: auto;
+    margin-left: 10px;
+}
+
+.box{
+    display: flex;
+    margin: auto;
+    /* text-align: center; */
 }
 
 .icon{

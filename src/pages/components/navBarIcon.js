@@ -18,7 +18,6 @@ export default function NavBarIcon(props) {
     }
 
     function handleProfilePage() {
-
         router.push("/user/" + props.token.id);
     }
 
@@ -33,10 +32,24 @@ export default function NavBarIcon(props) {
                     {console.log("navigate to " + props.name + " icon")}
                     {userToggle && props.token && (
                         <div className={styles.userNavigate}>
-                            <div className={styles.option} onClick={handleProfilePage}>Profile page</div>
-                            <div className = {styles.option} onClick={handleLogOut}>Log out</div>
+                            <div
+                                className={styles.option}
+                                onClick={handleProfilePage}>
+                                Profile page
+                            </div>
+                            <div
+                                className={styles.option}
+                                onClick={handleLogOut}>
+                                Log out
+                            </div>
                         </div>
                     )}
+                </div>
+            ) : url == "" ? (
+                <div className={styles.icon}>
+                    <div>{props.component}</div>
+                    <div>{props.name}</div>
+                    {console.log("navigate to " + props.name + " icon")}
                 </div>
             ) : (
                 <Link href={url} className={styles.icon}>

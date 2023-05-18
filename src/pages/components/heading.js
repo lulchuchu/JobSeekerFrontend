@@ -5,19 +5,79 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { MdWork } from "react-icons/md";
 import { AiFillMessage } from "react-icons/ai";
-import { BiMessageRoundedDots } from "react-icons/bi";
 import { IoMdNotifications } from "react-icons/io";
 import { FiLogIn } from "react-icons/fi";
 import NavBarIcon from "./navBarIcon";
 import styles from "@/styles/heading.module.css";
+import axios from "axios";
+import SockJS from "sockjs-client";
+import { over } from "stompjs";
 
 export default function Heading() {
     const [token, setToken] = useState(null);
+    const [notiShow, setnotiShow] = useState(false);
+    const [notification, setNotification] = useState([]);
+    const [stompCLient, setStompClient] = useState(null);
+    const [newNotification, setNewNotification] = useState([]);
+
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
     console.log("token in heading", token);
+
+    useEffect(() => {
+        if(token){
+
+            console.log("in subcribe")
+            console.log("token when subcribe", token)
+            
+            let Sock = new SockJS("http://localhost:8080/ws");
+            let stompClient = setStompClient(over(Sock));
+    
+            stompClient?.connect({}, onConnected, onError);
+            console.log("stompClient", '/user/' + token.name + "/notification")
+            function onConnected() {
+                console.log("subcribing")
+                stompClient.subscribe(
+                    "/user/" + token.name + "/notification",
+                    onNotificationReceived
+                );
+            }
+    
+            function onError(error) {
+                console.error("WebSocket error:", error);
+            }
+    
+            function onNotificationReceived(notification) {
+                // Handle the received notification
+                console.log("Received notification:", notification.body);
+                // You can display the notification or perform any other desired actions
+            }
+        }
+    }, [token]);
+
+    function handleNotificationClick() {
+        setnotiShow(!notiShow);
+        const fetchData = async () => {
+            const result = await axios.get(
+                "http://localhost:8080/api/notification/user",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token.accessToken}`,
+                    },
+                    params: {
+                        userId: token.id,
+                    },
+                }
+            );
+            console.log("result", result.data);
+            setNotification(result.data);
+        };
+        if (notiShow) {
+            fetchData();
+        }
+    }
 
     return (
         <div className={styles.heading}>
@@ -42,11 +102,39 @@ export default function Heading() {
                     />
                 )}
                 {token && (
-                    <NavBarIcon
-                        url="/notification"
-                        component={<IoMdNotifications size={30} />}
-                        name="Notifications"
-                    />
+                    <div className={styles.notiMain}>
+                        <div
+                            onClick={() => {
+                                handleNotificationClick();
+                            }}>
+                            <NavBarIcon
+                                url=""
+                                component={<IoMdNotifications size={30} />}
+                                name="Notifications"
+                            />
+                        </div>
+
+                        {notiShow && (
+                            <div className={styles.noti}>
+                                {notification?.map((noti) => (
+                                    <div className={styles.oneNoti}>
+                                        <img
+                                            className={styles.profilePicture}
+                                            src={
+                                                process.env
+                                                    .NEXT_PUBLIC_API_PIC_URL +
+                                                noti.senderAvatar
+                                            }
+                                            width={41}
+                                            height={41}
+                                        />
+                                        <div>{noti.message} {noti.postId}</div>
+                                        
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 )}
                 {token ? (
                     <>
@@ -65,9 +153,8 @@ export default function Heading() {
                                     height={30}></img>
                             }
                             name="Profile"
-                        />                
+                        />
                     </>
-
                 ) : (
                     <NavBarIcon
                         url="/login"

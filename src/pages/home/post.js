@@ -2,11 +2,12 @@ import axios from "axios";
 import { useRef, useState } from "react";
 import { useEffect } from "react";
 import Link from "next/link";
+import SockJS from "sockjs-client";
+import { over } from "stompjs";
 
 import { AiOutlineLike, AiTwotoneLike } from "react-icons/ai";
-import { MdOutlineInsertComment, MdInsertComment } from "react-icons/md";
+import { MdOutlineInsertComment } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
-import { BsShare, BsShareFill } from "react-icons/bs";
 
 import styles from "@/styles/post.module.css";
 
@@ -18,9 +19,10 @@ export default function Post({ post }) {
     const [commentContent, setCommentContent] = useState("");
     const [commentShowing, setCommentShowing] = useState(false);
     const [token, setToken] = useState(null);
+    const [stompClient, setStompClient] = useState(null);
 
     const postId = post.id;
-    const imgs = post.images ? post.images.split(","):null;
+    const imgs = post.images ? post.images.split(",") : null;
 
     const target = post.user == null ? post.company : post.user;
     const targetUrl =
@@ -31,6 +33,33 @@ export default function Post({ post }) {
     }, []);
     console.log("token in heading", token);
     const ref = useRef();
+
+    useEffect(() => {
+        if (token) {
+            let Sock = new SockJS("http://localhost:8080/ws");
+            let stompClient = setStompClient(over(Sock));
+
+            stompClient?.connect({}, onConnected, onError);
+
+            function onConnected() {
+                // stompClient.subscribe(
+                //     "/user/notification",
+                //     onNotificationReceived
+                // );
+                console.log("Connected");
+            }
+
+            function onError(error) {
+                console.error("WebSocket error:", error);
+            }
+
+            function onNotificationReceived(notification) {
+                // Handle the received notification
+                console.log("Received notification:", notification.body);
+                // You can display the notification or perform any other desired actions
+            }
+        }
+    }, [token]);
 
     useEffect(() => {
         if (token && postId) {
@@ -52,6 +81,19 @@ export default function Post({ post }) {
 
     function handleLikeButton() {
         const like = async () => {
+            const data = {
+                message: token.name + " liked your post",
+                senderId: token.id,
+                senderName: token.name,
+                postId: postId,
+            };
+
+            stompClient.send(
+                "/app/receive-like-notification",
+                {},
+                JSON.stringify(data)
+            );
+
             const res = await axios.post(
                 process.env.NEXT_PUBLIC_API_LIKE_URL +
                     "create?postId=" +
@@ -88,14 +130,26 @@ export default function Post({ post }) {
         }
     }
 
-    function handleShareButton() {}
-
     async function handleSendButton() {
-        const data = {
-            contents: commentContent,
-            postId: postId,
-        };
         const send = async () => {
+            const data = {
+                contents: commentContent,
+                postId: postId,
+            };
+
+            const commentNoti = {
+                message: token.name + " commented your post",
+                senderId: token.id,
+                senderName: token.name,
+                postId: postId,
+            };
+
+            stompClient.send(
+                "/app/receive-like-notification",
+                {},
+                JSON.stringify(commentNoti)
+            );
+
             const result = axios.post(
                 process.env.NEXT_PUBLIC_API_COMMENT_URL + "post",
                 data,
@@ -148,23 +202,27 @@ export default function Post({ post }) {
             </div>
             <div className={styles.buttonLayout}>
                 <button className={styles.button} onClick={handleLikeButton}>
-                    {isLiked ? (
-                        <AiTwotoneLike className={styles.icon} size={24} color="#1DA1F2"/>
-                    ) : (
-                        <AiOutlineLike className={styles.icon} size={24} />
-                    )}
-                    <p className={styles.buttonText}>
-                        {isLiked ? "Liked" : "Like"}
-                    </p>
+                    <div className={styles.box}>
+                        {isLiked ? (
+                            <AiTwotoneLike size={24} color="#1DA1F2" />
+                        ) : (
+                            <AiOutlineLike size={24} />
+                        )}
+                        <div className={styles.buttonText}>
+                            {isLiked ? "Liked" : "Like"}
+                        </div>
+                    </div>
                 </button>
                 <button className={styles.button} onClick={handleCommentButton}>
-                    <MdOutlineInsertComment className={styles.icon} size={24} />
-                    <p className={styles.buttonText}>Comment</p>
+                    <div className={styles.box}>
+                        <MdOutlineInsertComment size={24} />
+                        <div className={styles.buttonText}>Comment</div>
+                    </div>
                 </button>
-                <button className={styles.button} onClick={handleShareButton}>
+                {/* <button className={styles.button} onClick={handleShareButton}>
                     <BsShare className={styles.icon} size={24} />
                     <p className={styles.buttonText}>Share</p>
-                </button>
+                </button> */}
             </div>
             {/* {console.log(comments)} */}
             <div className={styles.commentLayout}>

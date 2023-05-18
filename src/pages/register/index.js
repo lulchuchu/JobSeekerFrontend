@@ -17,7 +17,8 @@ export default function login() {
             name: name,
             username: username,
             password: password,
-            email: email
+            email: email,
+            profilePicture: "blankuser.png"
         }
         axios
             .post("http://localhost:8080/register", data)
