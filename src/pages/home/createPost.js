@@ -170,7 +170,7 @@ export default function CreatePost({
             </div>
 
             <button
-                className={styles.button}
+                className={styles.buttonAddPhoto}
                 onClick={() => setCreatePostShowing(true)}>
                 <div className={styles.box}>
                     <HiOutlinePhotograph size={24} />

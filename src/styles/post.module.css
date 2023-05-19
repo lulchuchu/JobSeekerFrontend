@@ -64,13 +64,36 @@
 .button{
     display: flex;
     width: 100%;
-    border-radius: 24px;
     text-align: center;
     min-height: 30px;
-    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    border: 0px;
+    border-top: 1px solid #e0e0e0;
     background-color: white;
 
 }
+
+.button:hover{
+    background-color: #e0e0e0;
+}
+
+.buttonAddPhoto{
+    display: flex;
+    width: 100%;
+    border-radius: 24px;
+    text-align: center;
+    min-height: 30px;
+    border: 0px;
+    border-top: 1px solid #e0e0e0;
+    background-color: white;
+
+}
+
+.buttonAddPhoto:hover{
+    background-color: #e0e0e0;
+}
+
+
 
 .buttonText{
     margin: auto;
@@ -88,9 +111,6 @@
     
 }
 
-.button:hover{
-    background-color: #e0e0e0;
-}
 
 /* Create Post section */
 .create{

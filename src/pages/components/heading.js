@@ -17,64 +17,68 @@ export default function Heading() {
     const [token, setToken] = useState(null);
     const [notiShow, setnotiShow] = useState(false);
     const [notification, setNotification] = useState([]);
-    const [stompCLient, setStompClient] = useState(null);
+    // const [stompCLient, setStompClient] = useState(null);
     const [newNotification, setNewNotification] = useState([]);
-
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
     console.log("token in heading", token);
 
-    useEffect(() => {
-        if(token){
+    // useEffect(() => {
+    if (token) {
+        console.log("in subcribe");
+        console.log("token when subcribe", token);
 
-            console.log("in subcribe")
-            console.log("token when subcribe", token)
-            
-            let Sock = new SockJS("http://localhost:8080/ws");
-            let stompClient = setStompClient(over(Sock));
-    
-            stompClient?.connect({}, onConnected, onError);
-            console.log("stompClient", '/user/' + token.name + "/notification")
-            function onConnected() {
-                console.log("subcribing")
-                stompClient.subscribe(
-                    "/user/" + token.name + "/notification",
-                    onNotificationReceived
-                );
-            }
-    
-            function onError(error) {
-                console.error("WebSocket error:", error);
-            }
-    
-            function onNotificationReceived(notification) {
-                // Handle the received notification
-                console.log("Received notification:", notification.body);
-                // You can display the notification or perform any other desired actions
-            }
+        let Sock = new SockJS("http://localhost:8080/ws");
+        // let stompClient = setStompClient(over(Sock));
+        let stompClient = over(Sock);
+
+        stompClient?.connect({}, onConnected, onError);
+        console.log("stompClient", "/user/" + token.name + "/notification");
+        function onConnected() {
+            console.log("subcribing");
+            stompClient.subscribe(
+                "/user/" + token.name + "/notification",
+                onNotificationReceived
+            );
         }
-    }, [token]);
+
+        function onError(error) {
+            console.error("WebSocket error:", error);
+        }
+
+        function onNotificationReceived(noti) {
+            // Handle the received notification
+            console.log("Received notification:", JSON.parse(noti.body));
+            let lst = [...notification];
+            lst.push(JSON.parse(noti.body));
+            setNotification(lst);
+            // You can display the notification or perform any other desired actions
+        }
+    }
+    // }, [token]);
 
     function handleNotificationClick() {
-        setnotiShow(!notiShow);
-        const fetchData = async () => {
-            const result = await axios.get(
-                "http://localhost:8080/api/notification/user",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.accessToken}`,
-                    },
-                    params: {
-                        userId: token.id,
-                    },
-                }
-            );
-            console.log("result", result.data);
-            setNotification(result.data);
-        };
         if (notiShow) {
+            setnotiShow(false);
+        } else {
+            setnotiShow(true);
+            const fetchData = async () => {
+                const result = await axios.get(
+                    "http://localhost:8080/api/notification/user",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token.accessToken}`,
+                        },
+                        params: {
+                            userId: token.id,
+                        },
+                    }
+                );
+                console.log("result", result.data);
+                setNotification(result.data);
+            };
             fetchData();
         }
     }
@@ -128,8 +132,9 @@ export default function Heading() {
                                             width={41}
                                             height={41}
                                         />
-                                        <div>{noti.message} {noti.postId}</div>
-                                        
+                                        <div>
+                                            {noti.message} {noti.postId}
+                                        </div>
                                     </div>
                                 ))}
                             </div>

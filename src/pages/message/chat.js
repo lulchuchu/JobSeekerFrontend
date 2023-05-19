@@ -19,89 +19,84 @@ export default function Chat({ token, receiver }) {
                 process.env.NEXT_PUBLIC_API_MESSAGE_URL + "chat",
                 {
                     headers: { Authorization: `Bearer ${token.accessToken}` },
-                    params: {senderId:token.id, receiverId: receiver },
+                    params: { receiverId: receiver },
                 }
             );
-            const result2 = await axios.get(
-                process.env.NEXT_PUBLIC_API_MESSAGE_URL + "chat",
-                {
-                    headers: { Authorization: `Bearer ${token.accessToken}` },
-                    params: {senderId:receiver,receiverId: token.id },
-                }
-            )
-            console.log("messages", result.data);
 
-            const rs = result.data.concat(result2.data);
-
-            setMessages(rs);
+            setMessages(result.data);
         };
         fetch();
     }, [receiver]);
 
     // useEffect(() => {
-            let Sock = new SockJS("http://localhost:8080/ws");
-            // let stompClient = setStompClient(over(Sock));
-            let stompClient = over(Sock);
+    let Sock = new SockJS("http://localhost:8080/ws");
+    // let stompClient = setStompClient(over(Sock));
+    let stompClient = over(Sock);
 
-            stompClient?.connect({}, onConnected, onError);
+    stompClient?.connect({}, onConnected, onError);
 
-            function onConnected() {
-                stompClient.subscribe(
-                    "/user/" + token.name + "/message",
-                    onMessageReceive
-                );
-                console.log("Connected");
-            }
+    function onConnected() {
+        stompClient.subscribe(
+            "/user/" + token.name + "/message",
+            onMessageReceive
+        );
+        console.log("Connected");
+    }
 
-            function onError(error) {
-                console.error("WebSocket error:", error);
-            }
+    function onError(error) {
+        console.error("WebSocket error:", error);
+    }
 
-            function onMessageReceive(message) {
-                let lst = [...messages];
-                lst.push(JSON.parse(message.body));
-                setMessages(lst);
-                console.log("Received message:", messages);            }
-        // }, []);
+    function onMessageReceive(message) {
+        let lst = [...messages];
+        lst.push(JSON.parse(message.body));
+        setMessages(lst);
+        console.log("Received message:", messages);
+    }
+    // }, []);
 
-    function handleSendClick(){
-
+    function handleSendClick() {
         const data = {
             contents: content,
             senderId: token.id,
-            receiverId: receiver
-        }
+            receiverId: receiver,
+        };
 
         ref.current.value = "";
         stompClient.send("/app/receive-message", {}, JSON.stringify(data));
-        console.log("sent clicked")
+        let lst = [...messages];
+        lst.push({...data, senderName: token.name, senderAvatar: token.profilePicture});
+        setMessages(lst);
     }
 
-    
-
     return (
-
-            <div className={styles.mainChatLayout}>
-                <div className={styles.chatLayout}>
-                    {messages.map((mess) => 
+        <div className={styles.mainChatLayout}>
+            <div className={styles.chatLayout}>
+                {messages.map((mess) => (
                     <>
-                            <div>{mess.senderName}</div>
-                            <div>{mess.contents}</div>
+                        <img
+                            src={
+                                process.env.NEXT_PUBLIC_API_PIC_URL +
+                                mess.senderAvatar
+                            }
+                            width={40}
+                            height={40}></img>
+                        <div>{mess.senderName}</div>
+                        <div>{mess.contents}</div>
                     </>
-                    )}
-                </div>
-                <div className={styles.text}>
-                    <input
-                        className={styles.input}
-                        ref={ref}
-                        placeholder="Write a message"
-                        onChange={(e) => setContent(e.target.value)}></input>
+                ))}
+            </div>
+            <div className={styles.text}>
+                <input
+                    className={styles.input}
+                    ref={ref}
+                    placeholder="Write a message"
+                    onChange={(e) => setContent(e.target.value)}></input>
 
-                    <div onClick={handleSendClick}>
-                        <IoSend className={styles.sendIcon} size={24} />
-                    </div>
+                <div onClick={handleSendClick}>
+                    <IoSend className={styles.sendIcon} size={24} />
                 </div>
             </div>
-    
+        </div>
     );
 }
