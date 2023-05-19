@@ -5,13 +5,13 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 import { RiShareBoxLine } from "react-icons/ri";
+import company from "../company/[index]";
 
 export default function JobDetail({ job }) {
     const [token, setToken] = useState(null);
     const [isApplied, setIsApplied] = useState(false);
     const router = useRouter();
     const jobId = job.id;
-
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
@@ -38,10 +38,10 @@ export default function JobDetail({ job }) {
     }, [token, jobId]);
 
     function handleClickApply() {
-        if(!token){
+        if (!token) {
             alert("Please login to apply");
             router.push("/login");
-        }else{
+        } else {
             const apply = async () => {
                 const res = await axios.post(
                     process.env.NEXT_PUBLIC_API_JOB_URL +
@@ -49,13 +49,16 @@ export default function JobDetail({ job }) {
                         "?applicationId=" +
                         jobId,
                     {},
-                    { headers: { Authorization: `Bearer ${token.accessToken}` } }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token.accessToken}`,
+                        },
+                    }
                 );
                 console.log("data is ", res.data);
             };
             apply();
             setIsApplied(!isApplied);
-
         }
     }
 
@@ -74,14 +77,28 @@ export default function JobDetail({ job }) {
                 </div>
                 <div className={styles.type}>{job.type}</div>
 
-                <button
-                    className={styles.applyButton}
-                    onClick={handleClickApply}>
-                    <p className={styles.buttonText}>
-                        {isApplied ? "Applied" : "Apply"}
-                    </p>
-                    <RiShareBoxLine size={24} className={styles.icon} />
-                </button>
+                <div className={styles.buttonLst}>
+                    <button
+                        className={styles.applyButton}
+                        onClick={handleClickApply}>
+                        <p className={styles.buttonText}>
+                            {isApplied ? "Applied" : "Apply"}
+                        </p>
+                        <RiShareBoxLine size={24} className={styles.icon} />
+                    </button>
+
+                    {job.company.admin?.id === token?.id && (
+                        <button
+                            className={styles.applyButton}
+                            onClick={() =>
+                                router.push(
+                                    "/job/company/applicant/" + job.id
+                                )
+                            }>
+                            <p className={styles.buttonText}>View applicants</p>
+                        </button>
+                    )}
+                </div>
 
                 <h3>About the job</h3>
                 <div className={styles.description}>{job.description}</div>

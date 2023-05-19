@@ -23,7 +23,7 @@ export default function Heading() {
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
-    console.log("token in heading", token);
+
 
     // useEffect(() => {
     if (token) {

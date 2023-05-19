@@ -31,7 +31,6 @@ export default function Post({ post }) {
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
-    console.log("token in heading", token);
     const ref = useRef();
 
     useEffect(() => {
