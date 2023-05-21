@@ -1,7 +1,7 @@
 import styles from "@/styles/post.module.css";
 import Link from "next/link";
 import axios from "axios";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { HiOutlinePhotograph } from "react-icons/hi";
 import { IoSend } from "react-icons/io5";
 import SockJS from "sockjs-client";
@@ -23,8 +23,6 @@ export default function CreatePost({
     const [showingPhoto, setShowingPhoto] = useState(true); // [1
 
     const [stompClient, setStompClient] = useState(null);
-
-    const ref = useRef(null);
 
     useEffect(() => {
         if (token) {
@@ -108,7 +106,7 @@ export default function CreatePost({
 
                 alert(result.data);
             };
-            ref.current.value = "";
+            setContent('');
             setShowingPhoto(false);
             post();
         };
@@ -150,14 +148,14 @@ export default function CreatePost({
                 />
                 <input
                     className={styles.input}
-                    ref={ref}
+                    value={content}
                     placeholder="Start a post"
                     onChange={(e) => setContent(e.target.value)}></input>
 
                 <Link href="">
-                    <div onClick={handleSendClick}>
+                    <button className={styles.sendButton} disabled = {!content} onClick={handleSendClick}>
                         <IoSend className={styles.sendIcon} size={24} />
-                    </div>
+                    </button>
                 </Link>
             </div>
 

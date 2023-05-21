@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useRef, useState } from "react";
+import {useState } from "react";
 import { useEffect } from "react";
 import Link from "next/link";
 import SockJS from "sockjs-client";
@@ -20,6 +20,7 @@ export default function Post({ post }) {
     const [commentShowing, setCommentShowing] = useState(false);
     const [token, setToken] = useState(null);
     const [stompClient, setStompClient] = useState(null);
+    // let stompClient = over(Sock);
 
     const postId = post.id;
     const imgs = post.images ? post.images.split(",") : null;
@@ -28,16 +29,16 @@ export default function Post({ post }) {
     const targetUrl =
         post.user == null ? "/company/" + target.id : "/user/" + target.id;
 
+
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
-    const ref = useRef();
 
     useEffect(() => {
         if (token) {
             let Sock = new SockJS("http://localhost:8080/ws");
             let stompClient = setStompClient(over(Sock));
-
+            // setStompClient(over(Sock));
             stompClient?.connect({}, onConnected, onError);
 
             function onConnected() {
@@ -53,11 +54,12 @@ export default function Post({ post }) {
             }
 
             function onNotificationReceived(notification) {
-                // Handle the received notification
                 console.log("Received notification:", notification.body);
-                // You can display the notification or perform any other desired actions
             }
         }
+        // return () => {
+        //     Sock.close();
+        // };
     }, [token]);
 
     useEffect(() => {
@@ -157,10 +159,9 @@ export default function Post({ post }) {
             handleCommentButton();
         };
         await send();
-        ref.current.value = "";
+        setCommentContent('');
         setCountComment(countComment + 1);
         handleCommentButton();
-        // console.log("hit the wowo")
     }
 
     return (
@@ -218,16 +219,11 @@ export default function Post({ post }) {
                         <div className={styles.buttonText}>Comment</div>
                     </div>
                 </button>
-                {/* <button className={styles.button} onClick={handleShareButton}>
-                    <BsShare className={styles.icon} size={24} />
-                    <p className={styles.buttonText}>Share</p>
-                </button> */}
             </div>
-            {/* {console.log(comments)} */}
             <div className={styles.commentLayout}>
                 {comments != undefined && commentShowing
                     ? comments.map((comment) => (
-                          <div className={styles.comment}>
+                        <div key = {comment.id} className={styles.comment}>
                               <img
                                   className={styles.commentProfilePic}
                                   src={
@@ -265,13 +261,13 @@ export default function Post({ post }) {
                 )}
                 <input
                     className={styles.input}
-                    ref={ref}
+                    value = {commentContent}
                     placeholder="Write a comment"
                     onChange={(e) => setCommentContent(e.target.value)}></input>
                 <Link href="">
-                    <div onClick={handleSendButton}>
+                    <button className={styles.sendButton} disabled = {!commentContent} onClick={handleSendButton}>
                         <IoSend className={styles.sendIcon} size={24} />
-                    </div>
+                    </button>
                 </Link>
             </div>
         </div>

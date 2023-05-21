@@ -69,7 +69,7 @@ export default function InfoCard({ company }) {
                         onClick={() => router.push(company.website)}>
                         Visit Website
                     </button>                    
-                    {company?.admin?.id === token?.id && <button className={styles.button} onClick={() => router.push("/job/company/" + company.id)}>Opening jobs</button>}
+                    {company?.admin?.id === token?.id && <button className={styles.button} onClick={() => router.push("/job/company/all/" + company.id)}>Opening jobs</button>}
                 </div>
             </div>
         </div>

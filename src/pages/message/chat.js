@@ -7,8 +7,11 @@ import { over } from "stompjs";
 import axios from "axios";
 
 export default function Chat({ token, receiver }) {
+    let Sock = new SockJS("http://localhost:8080/ws");
+    let stompClient = over(Sock);
     const [messages, setMessages] = useState([]);
     const [content, setContent] = useState("");
+    const refList = useRef(null);
     // const [stompClient, setStompClient] = useState(null);
 
     const ref = useRef(null);
@@ -24,36 +27,42 @@ export default function Chat({ token, receiver }) {
             );
 
             setMessages(result.data);
+            // setTimeout(() => {
+            //     scrollToBottom();
+            // }, 100);
         };
         fetch();
     }, [receiver]);
 
-    // useEffect(() => {
-    let Sock = new SockJS("http://localhost:8080/ws");
-    // let stompClient = setStompClient(over(Sock));
-    let stompClient = over(Sock);
+    useEffect(() => {
+        // let stompClient = setStompClient(over(Sock));
 
-    stompClient?.connect({}, onConnected, onError);
+        stompClient?.connect({}, onConnected, onError);
 
-    function onConnected() {
-        stompClient.subscribe(
-            "/user/" + token.name + "/message",
-            onMessageReceive
-        );
-        console.log("Connected");
-    }
+        function onConnected() {
+            stompClient.subscribe(
+                "/user/" + token.name + "/message",
+                onMessageReceive
+            );
+            console.log("Connected");
+        }
 
-    function onError(error) {
-        console.error("WebSocket error:", error);
-    }
+        function onError(error) {
+            console.error("WebSocket error:", error);
+        }
 
-    function onMessageReceive(message) {
-        let lst = [...messages];
-        lst.push(JSON.parse(message.body));
-        setMessages(lst);
-        console.log("Received message:", messages);
-    }
-    // }, []);
+        function onMessageReceive(message) {
+            let lst = [...messages, JSON.parse(message.body)];
+            console.log("body", message.body);
+            // lst.push(JSON.parse(message.body));
+            setMessages(lst);
+            console.log("Received message:", messages);
+            // scrollToBottom();
+        }
+        return () => {
+            Sock.close();
+        };
+    }, [messages]);
 
     function handleSendClick() {
         const data = {
@@ -62,40 +71,65 @@ export default function Chat({ token, receiver }) {
             receiverId: receiver,
         };
 
-        ref.current.value = "";
+        setContent('');
         stompClient.send("/app/receive-message", {}, JSON.stringify(data));
         let lst = [...messages];
-        lst.push({...data, senderName: token.name, senderAvatar: token.profilePicture});
+        lst.push({
+            ...data,
+            senderName: token.name,
+            senderAvatar: token.profilePicture,
+        });
         setMessages(lst);
+        // scrollToBottom();
     }
-
+    // const scrollToBottom = () => {
+    //     const heightScroll = refList.current.scrollHeight;
+    //     refList.current?.scrollTo(0, heightScroll);
+    // };
     return (
         <div className={styles.mainChatLayout}>
-            <div className={styles.chatLayout}>
+            <div className={styles.chatLayout} ref={refList}>
                 {messages.map((mess) => (
                     <>
-                        <img
-                            src={
-                                process.env.NEXT_PUBLIC_API_PIC_URL +
-                                mess.senderAvatar
-                            }
-                            width={40}
-                            height={40}></img>
-                        <div>{mess.senderName}</div>
-                        <div>{mess.contents}</div>
+                        {token.id === mess.senderId ? (
+                            <div className={styles.me}>
+                                <div style={{background: "#ccffff"}} className={styles.content}>{mess.contents}</div>
+                                <img
+                                    className={styles.img}
+                                    src={
+                                        process.env.NEXT_PUBLIC_API_PIC_URL +
+                                        mess.senderAvatar
+                                    }
+                                    width={40}
+                                    height={40}></img>
+                            </div>
+                        ) : (
+                            <div className={styles.other}>
+                                <img
+                                    className={styles.img}
+                                    src={
+                                        process.env.NEXT_PUBLIC_API_PIC_URL +
+                                        mess.senderAvatar
+                                    }
+                                    width={40}
+                                    height={40}></img>
+                                <div style={{background: "white"}} className={styles.content}>{mess.contents}</div>
+                            </div>
+                        )}
                     </>
                 ))}
+                {/* <div ref={refList}></div> */}
             </div>
             <div className={styles.text}>
                 <input
                     className={styles.input}
-                    ref={ref}
                     placeholder="Write a message"
+                    value={content}
                     onChange={(e) => setContent(e.target.value)}></input>
 
-                <div onClick={handleSendClick}>
+                <button className={styles.sendButton} onClick={handleSendClick} disabled = {!content}>
                     <IoSend className={styles.sendIcon} size={24} />
-                </div>
+                </button>
             </div>
         </div>
     );

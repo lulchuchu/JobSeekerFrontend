@@ -18,46 +18,42 @@ export default function Heading() {
     const [notiShow, setnotiShow] = useState(false);
     const [notification, setNotification] = useState([]);
     // const [stompCLient, setStompClient] = useState(null);
-    const [newNotification, setNewNotification] = useState([]);
+    const Sock = new SockJS("http://localhost:8080/ws");
+    let stompClient = over(Sock);
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
 
+    useEffect(() => {
+        if (token) {
+            // let stompClient = setStompClient(over(Sock));
+            stompClient?.connect({}, onConnected, onError);
+            console.log("stompClient", "/user/" + token.name + "/notification");
+            function onConnected() {
+                console.log("subcribing");
+                stompClient.subscribe(
+                    "/user/" + token.name + "/notification",
+                    onNotificationReceived
+                );
+            }
 
-    // useEffect(() => {
-    if (token) {
-        console.log("in subcribe");
-        console.log("token when subcribe", token);
+            function onError(error) {
+                console.error("WebSocket error:", error);
+            }
 
-        let Sock = new SockJS("http://localhost:8080/ws");
-        // let stompClient = setStompClient(over(Sock));
-        let stompClient = over(Sock);
-
-        stompClient?.connect({}, onConnected, onError);
-        console.log("stompClient", "/user/" + token.name + "/notification");
-        function onConnected() {
-            console.log("subcribing");
-            stompClient.subscribe(
-                "/user/" + token.name + "/notification",
-                onNotificationReceived
-            );
+            function onNotificationReceived(noti) {
+                console.log("Received notification:", JSON.parse(noti.body));
+                let lst = [...notification];
+                lst.push(JSON.parse(noti.body));
+                setNotification(lst);
+                setnotiShow(true)
+            }
         }
-
-        function onError(error) {
-            console.error("WebSocket error:", error);
-        }
-
-        function onNotificationReceived(noti) {
-            // Handle the received notification
-            console.log("Received notification:", JSON.parse(noti.body));
-            let lst = [...notification];
-            lst.push(JSON.parse(noti.body));
-            setNotification(lst);
-            // You can display the notification or perform any other desired actions
-        }
-    }
-    // }, [token]);
+        return () => {
+            Sock.close();
+        };
+    }, [token]);
 
     function handleNotificationClick() {
         if (notiShow) {
@@ -88,7 +84,7 @@ export default function Heading() {
             <Link href="/home" className={styles.iconHome}>
                 <img
                     alt="home-icon"
-                    src="/pics/cheemspic.png"
+                    src="/pics/work.png"
                     width={41}
                     height={41}></img>
             </Link>
@@ -118,11 +114,11 @@ export default function Heading() {
                             />
                         </div>
 
-                        {notiShow && (
+                        {notiShow && ((notification?.length > 0) ? (
                             <div className={styles.noti}>
                                 {notification?.map((noti) => (
-                                    <div className={styles.oneNoti}>
-                                        <img
+                                    <div key={noti.id} className={styles.oneNoti}>
+                                        {noti.senderAvatar != null?<img
                                             className={styles.profilePicture}
                                             src={
                                                 process.env
@@ -131,14 +127,14 @@ export default function Heading() {
                                             }
                                             width={41}
                                             height={41}
-                                        />
+                                        />:null}
                                         <div>
-                                            {noti.message} {noti.postId}
+                                            {noti.message} {noti.postID != null ? noti.postId: null}
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                        )}
+                        ): <div className={styles.noti}>None to show</div>)}
                     </div>
                 )}
                 {token ? (

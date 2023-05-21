@@ -133,7 +133,7 @@ export default function company() {
                         </div>
                         <div className={styles.mainPost}>
                             {posts.content?.map((post) => (
-                                <div className={styles.smallPost}>
+                                <div key = {post.id} className={styles.smallPost}>
                                     <Post post={post} key={post.id} />
                                 </div>
                             ))}
