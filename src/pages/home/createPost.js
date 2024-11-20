@@ -1,18 +1,18 @@
 import styles from "@/styles/post.module.css";
 import Link from "next/link";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { HiOutlinePhotograph } from "react-icons/hi";
-import { IoSend } from "react-icons/io5";
+import {useEffect, useState} from "react";
+import {HiOutlinePhotograph} from "react-icons/hi";
+import {IoSend} from "react-icons/io5";
 import SockJS from "sockjs-client";
-import { over } from "stompjs";
+import {over} from "stompjs";
 
 export default function CreatePost({
-    token,
-    setCreatePostShowing,
-    photos,
-    files,
-}) {
+                                       token,
+                                       setCreatePostShowing,
+                                       photos,
+                                       files,
+                                   }) {
     const userId = token.id;
     const profilePicture = token.profilePicture;
     //Content of post
@@ -54,7 +54,7 @@ export default function CreatePost({
     function handleSendClick() {
         //Upload photos
         const fetchData = async () => {
-            const result = await axios.post(
+            const result = files ? await axios.post(
                 process.env.NEXT_PUBLIC_API_FILE_URL + "upload",
                 files,
                 {
@@ -65,14 +65,11 @@ export default function CreatePost({
                                 .accessToken,
                     },
                 }
-            );
-            console.log("result", result.data);
-
-            // setPhotoNames(result.data);
+            ) : null;
 
             const data = {
                 content: content,
-                images: result.data,
+                images: result ? result.data : null,
             };
 
             //Create new Post with photos
@@ -153,8 +150,8 @@ export default function CreatePost({
                     onChange={(e) => setContent(e.target.value)}></input>
 
                 <Link href="">
-                    <button className={styles.sendButton} disabled = {!content} onClick={handleSendClick}>
-                        <IoSend className={styles.sendIcon} size={24} />
+                    <button className={styles.sendButton} disabled={!content} onClick={handleSendClick}>
+                        <IoSend className={styles.sendIcon} size={24}/>
                     </button>
                 </Link>
             </div>
@@ -163,7 +160,7 @@ export default function CreatePost({
                 {showingPhoto &&
                     photos &&
                     photos.map((photo) => (
-                        <img src={photo} width={200} height={200} />
+                        <img src={photo} width={200} height={200}/>
                     ))}
             </div>
 
@@ -171,7 +168,7 @@ export default function CreatePost({
                 className={styles.buttonAddPhoto}
                 onClick={() => setCreatePostShowing(true)}>
                 <div className={styles.box}>
-                    <HiOutlinePhotograph size={24} />
+                    <HiOutlinePhotograph size={24}/>
                     <p className={styles.buttonText}>Add a photo</p>
                 </div>
             </button>

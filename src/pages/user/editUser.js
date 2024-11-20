@@ -4,7 +4,6 @@ import axios from "axios";
 import { useRouter } from "next/router";
 
 export default function EditUser({ userDetail, setEdit }) {
-
     const [name, setName] = useState(userDetail?.name);
     const [shortDescription, setShortDescription] = useState(userDetail?.shortDescription);
     const [address, setAddress] = useState(userDetail?.address);
@@ -16,7 +15,6 @@ export default function EditUser({ userDetail, setEdit }) {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
 
-    
     const change_url = process.env.NEXT_PUBLIC_API_USER_URL + "update";
 
     function handleUpdate() {

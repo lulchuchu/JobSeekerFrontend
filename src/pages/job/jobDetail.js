@@ -10,8 +10,10 @@ import company from "../company/[index]";
 export default function JobDetail({ job }) {
     const [token, setToken] = useState(null);
     const [isApplied, setIsApplied] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const router = useRouter();
     const jobId = job.id;
+    console.log({job})
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
@@ -36,6 +38,26 @@ export default function JobDetail({ job }) {
             isApplied();
         }
     }, [token, jobId]);
+
+    // Check admin
+    useEffect(() => {
+        if (token && jobId) {
+            const isApplied = async () => {
+                const res = await axios.get(
+                    process.env.NEXT_PUBLIC_API_COMPANY_URL + "checkAdmin",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token.accessToken}`,
+                        },
+                        params: { userId: token.id, companyId: job.company.id},
+                    }
+                );
+                console.log("data is ", res.data);
+                setIsAdmin(res.data);
+            };
+            isApplied();
+        }
+    }, [token, job.company.id]);
 
     function handleClickApply() {
         if (!token) {
@@ -87,7 +109,7 @@ export default function JobDetail({ job }) {
                         <RiShareBoxLine size={24} className={styles.icon} />
                     </button>
 
-                    {job.company.admin?.id === token?.id && (
+                    {isAdmin && (
                         <button
                             className={styles.applyButton}
                             onClick={() =>
