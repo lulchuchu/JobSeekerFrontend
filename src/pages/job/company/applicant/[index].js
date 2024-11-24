@@ -1,11 +1,10 @@
 import Heading from "@/pages/components/heading";
 import styles from "@/styles/job.module.css";
 import axios from "axios";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import {useRouter} from "next/router";
+import {useEffect, useState} from "react";
 import SockJS from "sockjs-client";
-import { over } from "stompjs";
+import {over} from "stompjs";
 
 export default function Applicant() {
     const [token, setToken] = useState(null);
@@ -16,7 +15,7 @@ export default function Applicant() {
     const [interviewData, setInterviewData] = useState(null);
     const [userId, setUserId] = useState(null);
     const router = useRouter();
-    const { index } = router.query;
+    const {index} = router.query;
     const applicationId = parseInt(index);
 
     let Sock = new SockJS("http://localhost:8080/ws");
@@ -55,25 +54,16 @@ export default function Applicant() {
     useEffect(() => {
         if (token && applicationId) {
             const fetch = async () => {
-                const result = await axios.get(
-                    process.env.NEXT_PUBLIC_API_JOB_URL + "applied/all",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token.accessToken}`,
-                        },
-                        params: { applicationId: applicationId },
-                    }
-                );
-                const applicationDetail = await axios.get(
-                    process.env.NEXT_PUBLIC_API_JOB_URL +
-                        "detail/" +
-                        applicationId,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token.accessToken}`,
-                        },
-                    }
-                );
+                const result = await axios.get(process.env.NEXT_PUBLIC_API_JOB_URL + "applied/all", {
+                    headers: {
+                        Authorization: `Bearer ${token.accessToken}`,
+                    }, params: {applicationId: applicationId},
+                });
+                const applicationDetail = await axios.get(process.env.NEXT_PUBLIC_API_JOB_URL + "detail/" + applicationId, {
+                    headers: {
+                        Authorization: `Bearer ${token.accessToken}`,
+                    },
+                });
                 console.log("data is ", result.data);
                 setApplicants(result.data);
                 setApplication(applicationDetail.data);
@@ -84,40 +74,24 @@ export default function Applicant() {
 
     function handleSubmit() {
         const interviewDto = {
-            applicationId: applicationId,
-            time: interviewTime,
-            userId: userId,
+            applicationId: applicationId, time: interviewTime, userId: userId,
         };
 
         const fetchData = async () => {
-            const result = await axios.post(
-                process.env.NEXT_PUBLIC_API_JOB_URL + "setInterview",
-                interviewDto,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.accessToken}`,
-                    },
-                }
-            );
+            const result = await axios.post(process.env.NEXT_PUBLIC_API_JOB_URL + "setInterview", interviewDto, {
+                headers: {
+                    Authorization: `Bearer ${token.accessToken}`,
+                },
+            });
             console.log("result", result);
         };
 
         fetchData();
         const data = {
-            message:
-                "You have been invited to an interview at " +
-                interviewTime +
-                " for the position of " +
-                application.title +
-                " at " +
-                application.company.name,
+            message: "You have been invited to an interview at " + interviewTime + " for the position of " + application.title + " at " + application.company.name,
             receiverId: userId,
         };
-        stompClient.send(
-            "/app/receive-job-notification",
-            {},
-            JSON.stringify(data)
-        );
+        stompClient.send("/app/receive-job-notification", {}, JSON.stringify(data));
         setChooseShowing(false);
     }
 
@@ -125,28 +99,21 @@ export default function Applicant() {
         setChooseShowing(true);
         setUserId(applicantId);
         const fetchData = async () => {
-            const result = await axios.get(
-                process.env.NEXT_PUBLIC_API_JOB_URL + "getInterview",
-                {
-                    headers: {
-                        Authorization: `Bearer ${token.accessToken}`,
-                    },
-                    params: {
-                        applicationId: applicationId,
-                        userId: applicantId,
-                    },
-                }
-            );
+            const result = await axios.get(process.env.NEXT_PUBLIC_API_JOB_URL + "getInterview", {
+                headers: {
+                    Authorization: `Bearer ${token.accessToken}`,
+                }, params: {
+                    applicationId: applicationId, userId: applicantId,
+                },
+            });
             setInterviewData(result.data);
             console.log("result", result.data);
         };
         fetchData();
     }
 
-    return (
-        <>
-            {chooseShowing && (
-                <div className={styles.fixed}>
+    return (<>
+            {chooseShowing && (<div className={styles.fixed}>
                     <div className={styles.blur}></div>
                     <div className={styles.popup}>
                         <div className={styles.head}>
@@ -162,9 +129,7 @@ export default function Applicant() {
                             <input
                                 type="datetime-local"
                                 className={styles.input}
-                                onChange={(e) =>
-                                    setInterviewTime(e.target.value)
-                                }
+                                onChange={(e) => setInterviewTime(e.target.value)}
                             />
                         </div>
                         <div className={styles.form}>
@@ -178,9 +143,8 @@ export default function Applicant() {
                             Submit
                         </button>
                     </div>
-                </div>
-            )}
-            <Heading />
+                </div>)}
+            <Heading/>
             <div>
                 <link
                     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
@@ -192,41 +156,45 @@ export default function Applicant() {
                 <div className={styles.mainTable}>
                     <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Short Description</th>
-                                <th scope="col">Resume</th>
-                                <th scope="col">Option</th>
-                            </tr>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Short Description</th>
+                            <th scope="col">Resume</th>
+                            <th scope="col">Option</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {applicants.map((applicant) => (
-                                <tr>
-                                    <td>{applicant.id}</td>
-                                    <td>{applicant.name}</td>
-                                    <td>{applicant.email}</td>
-                                    <td>{applicant.shortDescription}</td>
-                                    <td>{applicant.cv}</td>
-                                    <td>
-                                        <button
-                                            className={styles.buttonTable}
-                                            onClick={() =>
-                                                handleChooseButton(applicant.id)
-                                            }>
-                                            Choose
-                                        </button>
-                                        <button className={styles.buttonTable}>
-                                            Reject
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
+                        {applicants.map((applicant) => (<tr
+                                id={applicant.id}
+                                onClick={() => router.push("/user/" + applicant.id)}
+                            >
+                                <td>{applicant.id}</td>
+                                <td>{applicant.name}</td>
+                                <td>{applicant.email}</td>
+                                <td>{applicant.shortDescription}</td>
+                                <td>{applicant.cv}</td>
+                                <td>
+                                    <button
+                                        className={styles.buttonTable}
+                                        onClick={(e) => {
+                                            e.stopPropagation()
+                                            handleChooseButton(applicant.id)
+                                        }}>
+                                        Choose
+                                    </button>
+                                    <button className={styles.buttonTable} onClick={(e) => {
+                                        e.stopPropagation()
+                                        handleChooseButton(applicant.id)
+                                    }}>
+                                        Reject
+                                    </button>
+                                </td>
+                            </tr>))}
                         </tbody>
                     </table>
                 </div>
             </div>
-        </>
-    );
+        </>);
 }

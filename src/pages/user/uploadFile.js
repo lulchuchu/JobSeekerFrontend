@@ -1,17 +1,36 @@
 import styles from "@/styles/infocard.module.css";
-import { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import axios from "axios";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
-export default function UploadFile({ setUpload, isProfilePic = false }) {
+export default function UploadFile({setUpload, isProfilePic = false}) {
     const [token, setToken] = useState(null);
     const [files, setFiles] = useState(null);
     const [imgSrc, setImgSrc] = useState(null);
+    const [currentCV, setCurrentCV] = useState(null);
 
     const router = useRouter();
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
+
+    useEffect(() => {
+        if (token && !isProfilePic) {
+            const resultCV = async () => {
+                const result = await axios.get(
+                        process.env.NEXT_PUBLIC_API_FILE_URL + `getCVFileName/${token.id}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token.accessToken}`,
+                            }
+                        }
+                    )
+                ;
+                setCurrentCV(result.data);
+            };
+            resultCV();
+        }
+    }, [token, isProfilePic]);
 
     function handleUpload(e) {
         const file = e.target.files[0];
@@ -43,8 +62,8 @@ export default function UploadFile({ setUpload, isProfilePic = false }) {
         if (isProfilePic) {
             const update = axios.post(
                 process.env.NEXT_PUBLIC_API_USER_URL +
-                    "changeProfilePicture?path=" +
-                    files.get("files").name,
+                "changeProfilePicture?path=" +
+                files.get("files").name,
                 {},
                 {
                     headers: {
@@ -58,8 +77,8 @@ export default function UploadFile({ setUpload, isProfilePic = false }) {
         } else {
             const update = axios.post(
                 process.env.NEXT_PUBLIC_API_USER_URL +
-                    "changeCV?path=" +
-                    files.get("files").name,
+                "changeCV?path=" +
+                files.get("files").name,
                 {},
                 {
                     headers: {
@@ -75,8 +94,6 @@ export default function UploadFile({ setUpload, isProfilePic = false }) {
         router.reload();
     }
 
-    console.log("imgsrc", imgSrc)
-
     return (
         <div className={styles.fixed}>
             <div className={styles.blur}></div>
@@ -85,15 +102,16 @@ export default function UploadFile({ setUpload, isProfilePic = false }) {
                     <div className={styles.title}>Upload file</div>
                     <button
                         onClick={() => setUpload(false)}
-                        className={styles.buttonSmall}>
+                        className={styles.buttonSmall}
+                    >
                         X
                     </button>
                 </div>
                 {isProfilePic ? (
                     <div>
                         Choose a picture to set as your profile picture
-                        <br />
-                        <br />
+                        <br/>
+                        <br/>
                         {files?.get("files") && (
                             <img
                                 // src={
@@ -109,8 +127,12 @@ export default function UploadFile({ setUpload, isProfilePic = false }) {
                     </div>
                 ) : (
                     <div className={styles.files}>
-                        {/* {files?.map((file) => <div>{file.name}</div>)} */}
-                        {files?.get("files").name}
+                        {files?.get("files").name || token && currentCV &&
+                            <a href={process.env.NEXT_PUBLIC_API_FILE_URL + `getCV/${token.id}`} target="_blank"
+                               rel="noopener noreferrer" download>
+                                {currentCV}
+                            </a>
+                        }
                     </div>
                 )}
                 <div className={styles.buttons}>
@@ -118,13 +140,15 @@ export default function UploadFile({ setUpload, isProfilePic = false }) {
                         type="file"
                         onChange={handleUpload}
                         id="actual-btn"
-                        hidden></input>
+                        hidden
+                    ></input>
                     <button className={styles.uploadButton}>
                         <label for="actual-btn">Choose File</label>
                     </button>
                     <button
                         className={styles.confirmButton}
-                        onClick={handleConfirm}>
+                        onClick={handleConfirm}
+                    >
                         Confirm
                     </button>
                 </div>
