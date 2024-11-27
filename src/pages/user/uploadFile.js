@@ -7,7 +7,7 @@ export default function UploadFile({setUpload, isProfilePic = false}) {
     const [token, setToken] = useState(null);
     const [files, setFiles] = useState(null);
     const [imgSrc, setImgSrc] = useState(null);
-    const [currentCV, setCurrentCV] = useState(null);
+    const [cvs, setCvs] = useState([]);
 
     const router = useRouter();
     useEffect(() => {
@@ -17,16 +17,12 @@ export default function UploadFile({setUpload, isProfilePic = false}) {
     useEffect(() => {
         if (token && !isProfilePic) {
             const resultCV = async () => {
-                const result = await axios.get(
-                        process.env.NEXT_PUBLIC_API_FILE_URL + `getCVFileName/${token.id}`,
-                        {
-                            headers: {
-                                Authorization: `Bearer ${token.accessToken}`,
-                            }
-                        }
-                    )
-                ;
-                setCurrentCV(result.data);
+                const result = await axios.get(process.env.NEXT_PUBLIC_API_FILE_URL + `getCVFileName/${token.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token.accessToken}`,
+                    }
+                });
+                setCvs(result.data);
             };
             resultCV();
         }
@@ -47,112 +43,128 @@ export default function UploadFile({setUpload, isProfilePic = false}) {
     }
 
     function handleConfirm() {
-        const result = axios.post(
-            process.env.NEXT_PUBLIC_API_FILE_URL + "upload",
-            files,
-            {
-                headers: {
-                    Authorization:
-                        "Bearer " +
-                        JSON.parse(localStorage.getItem("token")).accessToken,
-                },
-            }
-        ).data;
+        files && axios.post(process.env.NEXT_PUBLIC_API_FILE_URL + "upload", files, {
+            headers: {
+                Authorization: "Bearer " + JSON.parse(localStorage.getItem("token")).accessToken,
+            },
+        }).data;
 
-        if (isProfilePic) {
-            const update = axios.post(
-                process.env.NEXT_PUBLIC_API_USER_URL +
-                "changeProfilePicture?path=" +
-                files.get("files").name,
-                {},
-                {
+        if (files) {
+            if (isProfilePic) {
+                const update = axios.post(process.env.NEXT_PUBLIC_API_USER_URL + "changeProfilePicture?path=" + files.get("files").name, {}, {
                     headers: {
-                        Authorization:
-                            "Bearer " +
-                            JSON.parse(localStorage.getItem("token"))
-                                .accessToken,
+                        Authorization: "Bearer " + JSON.parse(localStorage.getItem("token")).accessToken,
                     },
-                }
-            ).data;
-        } else {
-            const update = axios.post(
-                process.env.NEXT_PUBLIC_API_USER_URL +
-                "changeCV?path=" +
-                files.get("files").name,
-                {},
-                {
+                }).data;
+            } else {
+                const update = axios.post(process.env.NEXT_PUBLIC_API_USER_URL + "changeCV?path=" + files.get("files").name, {}, {
                     headers: {
-                        Authorization:
-                            "Bearer " +
-                            JSON.parse(localStorage.getItem("token"))
-                                .accessToken,
+                        Authorization: "Bearer " + JSON.parse(localStorage.getItem("token")).accessToken,
                     },
-                }
-            ).data;
+                }).data;
+            }
         }
+
         alert("Upload file successfully");
         router.reload();
     }
 
-    return (
-        <div className={styles.fixed}>
-            <div className={styles.blur}></div>
-            <div className={styles.popup}>
-                <div className={styles.head}>
-                    <div className={styles.title}>Upload file</div>
-                    <button
-                        onClick={() => setUpload(false)}
-                        className={styles.buttonSmall}
-                    >
-                        X
-                    </button>
-                </div>
-                {isProfilePic ? (
+    function handleDeleteCV(cvId) {
+        axios.post(process.env.NEXT_PUBLIC_API_FILE_URL + `deleteCV/${cvId}`, {}, {
+            headers: {
+                Authorization: "Bearer " + JSON.parse(localStorage.getItem("token")).accessToken,
+            }
+        }).then(() => {
+            setCvs(cvs.filter(cv => cv.id !== cvId));
+        });
+    }
+
+    return (<div className={styles.fixed}>
+        <div className={styles.blur}></div>
+        <div className={styles.popup}>
+            <div className={styles.head}>
+                <div className={styles.title}>Upload file</div>
+                <button
+                    onClick={() => setUpload(false)}
+                    className={styles.buttonSmall}
+                >
+                    X
+                </button>
+            </div>
+            {isProfilePic ? (<div>
+                Choose a picture to set as your profile picture
+                <br/>
+                <br/>
+                {files?.get("files") && (<img
+                    // src={
+                    //     process.env.NEXT_PUBLIC_API_FILE_URL +
+                    //     "getImage?path=" +
+                    //     files.get("files").name
+                    // }
+                    src={imgSrc}
+                    width={400}
+                    height={400}
+                />)}
+            </div>) : (<div className={styles.files}>
+                <div>
+                    <link
+                        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+                        rel="stylesheet"
+                        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+                        crossOrigin="anonymous"
+                    />
+
                     <div>
-                        Choose a picture to set as your profile picture
-                        <br/>
-                        <br/>
-                        {files?.get("files") && (
-                            <img
-                                // src={
-                                //     process.env.NEXT_PUBLIC_API_FILE_URL +
-                                //     "getImage?path=" +
-                                //     files.get("files").name
-                                // }
-                                src={imgSrc}
-                                width={400}
-                                height={400}
-                            />
-                        )}
+                        <table className="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col">File</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {cvs.map((cv) => (
+                                <tr>
+                                    <td>
+                                        <a
+                                            href={process.env.NEXT_PUBLIC_API_FILE_URL + `getCV/${cv.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer" download>
+                                            {cv.filename}
+                                        </a>
+                                    </td>
+                                    <td width={20}>
+                                        <button
+                                            onClick={() => handleDeleteCV(cv.id)}
+                                            className={styles.buttonSmall}>
+                                            X
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                            </tbody>
+                        </table>
                     </div>
-                ) : (
-                    <div className={styles.files}>
-                        {files?.get("files").name || token && currentCV &&
-                            <a href={process.env.NEXT_PUBLIC_API_FILE_URL + `getCV/${token.id}`} target="_blank"
-                               rel="noopener noreferrer" download>
-                                {currentCV}
-                            </a>
-                        }
-                    </div>
-                )}
-                <div className={styles.buttons}>
-                    <input
-                        type="file"
-                        onChange={handleUpload}
-                        id="actual-btn"
-                        hidden
-                    ></input>
-                    <button className={styles.uploadButton}>
-                        <label for="actual-btn">Choose File</label>
-                    </button>
-                    <button
-                        className={styles.confirmButton}
-                        onClick={handleConfirm}
-                    >
-                        Confirm
-                    </button>
                 </div>
+                {files?.get("files").name}
+            </div>)}
+            <div className={styles.buttons}>
+                <input
+                    type="file"
+                    onChange={handleUpload}
+                    id="actual-btn"
+                    hidden
+                ></input>
+                <button className={styles.uploadButton}>
+                    <label for="actual-btn">Choose File</label>
+                </button>
+                <button
+                    className={styles.confirmButton}
+                    onClick={handleConfirm}
+                >
+                    Confirm
+                </button>
             </div>
         </div>
-    );
+    </div>);
 }

@@ -7,6 +7,7 @@ import Job from "./jobInfo";
 import JobDetail from "./jobDetail";
 import ButtonFilter from "./buttonFilter";
 import useApiRequest from "../components/getRequest";
+import Apply from "@/pages/job/apply";
 
 export default function Jobb({ companyId, totalPage }) {
     const numberPerPage = 10;
@@ -15,7 +16,7 @@ export default function Jobb({ companyId, totalPage }) {
     //Current job details
     const [currentJob, setCurrentJob] = useState(null);
     const [currPagee, setCurrPage] = useState(1);
-
+    const [showApply, setShowApply] = useState(false)
 
     //List of page number
     const pageNum = [];
@@ -55,6 +56,7 @@ export default function Jobb({ companyId, totalPage }) {
     return (
         <>
             <Heading />
+            {showApply && <Apply setShowApply={setShowApply} applicationId={currentJob.id}/>}
             <div className={styles.layout}>
                 {/* Filter Button */}
                 <ButtonFilter
@@ -80,8 +82,6 @@ export default function Jobb({ companyId, totalPage }) {
                         {/* Pagination */}
                         <div className={styles.pagination}>
                             {pageNum.map((page) => {
-                                console.log("page", page)
-                                console.log("currPagee", currPagee)
                                 return (
                                 <button
                                     className={
@@ -102,7 +102,7 @@ export default function Jobb({ companyId, totalPage }) {
                     </div>
 
                     {/* If currentJob is clicked show job Detail */}
-                    {currentJob && <JobDetail job={currentJob} />}
+                    {currentJob && <JobDetail job={currentJob} setShowApply={setShowApply}/>}
                 </div>
             </div>
         </>

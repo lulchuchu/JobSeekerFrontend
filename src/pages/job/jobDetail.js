@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 
 import { RiShareBoxLine } from "react-icons/ri";
 import company from "../company/[index]";
+import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 
-export default function JobDetail({ job }) {
+export default function JobDetail({ job , setShowApply}) {
     const [token, setToken] = useState(null);
     const [isApplied, setIsApplied] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
@@ -60,16 +61,11 @@ export default function JobDetail({ job }) {
     }, [token, job.company.id]);
 
     function handleClickApply() {
-        if (!token) {
-            alert("Please login to apply");
-            router.push("/login");
-        } else {
-            const apply = async () => {
-                const res = await axios.post(
+        if (isApplied) {
+            async function unApply() {
+                await axios.post(
                     process.env.NEXT_PUBLIC_API_JOB_URL +
-                        "apply" +
-                        "?applicationId=" +
-                        jobId,
+                    `unApply?applicationId=${job.id}`,
                     {},
                     {
                         headers: {
@@ -77,11 +73,13 @@ export default function JobDetail({ job }) {
                         },
                     }
                 );
-                console.log("data is ", res.data);
-            };
-            apply();
-            setIsApplied(!isApplied);
+            }
+            unApply()
+            setIsApplied(false)
+            return
         }
+        setShowApply(true);
+        setIsApplied(true);
     }
 
     return (

@@ -131,7 +131,7 @@ export default function User() {
                     </div>
                     <div className={styles.mainContent}>
                         <div className={styles.text}>Experience</div>
-                        {experience.map((exp) => (
+                        {experience && experience.map((exp) => (
                             <Experience experience={exp} key={exp.id} />
                         ))}
                     </div>

@@ -10,19 +10,6 @@ export default function InfoCard({
     const [isFollowed, setIsFollowed] = useState(false);
     const [token, setToken] = useState(null);
     const following_id = userDetail?.id;
-    const [currentCV, setCurrentCV] = useState(null);
-
-    useEffect(() => {
-        if (userDetail) {
-
-            const resultCV = async () => {
-                const result = await axios.get(process.env.NEXT_PUBLIC_API_FILE_URL + `getCVFileName/${userDetail.id}`
-                );
-                setCurrentCV(result.data);
-            };
-            resultCV();
-        }
-    }, [userDetail]);
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
@@ -91,12 +78,6 @@ export default function InfoCard({
                     onClick={handleClickFollow}>
                     {isFollowed ? "Unfollow" : "Follow"}
                 </button>
-                {currentCV && <button className={styles.button}>
-                    <a href={process.env.NEXT_PUBLIC_API_FILE_URL + `getCV/${userDetail.id}`} target="_blank"
-                       rel="noopener noreferrer" download className={styles.customLink}>
-                        View CV
-                    </a>
-                </button>}
             </div>)}
         </div>
     </div>);

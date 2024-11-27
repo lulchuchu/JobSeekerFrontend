@@ -113,88 +113,93 @@ export default function Applicant() {
     }
 
     return (<>
-            {chooseShowing && (<div className={styles.fixed}>
-                    <div className={styles.blur}></div>
-                    <div className={styles.popup}>
-                        <div className={styles.head}>
-                            <div className={styles.title}>Choose Applicant</div>
-                            <button
-                                onClick={() => setChooseShowing(false)}
-                                className={styles.buttonSmall}>
-                                X
-                            </button>
-                        </div>
-                        <div className={styles.form}>
-                            <div>Interview Time</div>
-                            <input
-                                type="datetime-local"
-                                className={styles.input}
-                                onChange={(e) => setInterviewTime(e.target.value)}
-                            />
-                        </div>
-                        <div className={styles.form}>
-                            <div>Interview Data</div>
-                            <div>{interviewData?.time}</div>
-                        </div>
-
-                        <button
-                            className={styles.saveButton}
-                            onClick={handleSubmit}>
-                            Submit
-                        </button>
-                    </div>
-                </div>)}
-            <Heading/>
-            <div>
-                <link
-                    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
-                    rel="stylesheet"
-                    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
-                    crossOrigin="anonymous"
-                />
-
-                <div className={styles.mainTable}>
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th scope="col">Id</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Short Description</th>
-                            <th scope="col">Resume</th>
-                            <th scope="col">Option</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {applicants.map((applicant) => (<tr
-                                id={applicant.id}
-                                onClick={() => router.push("/user/" + applicant.id)}
-                            >
-                                <td>{applicant.id}</td>
-                                <td>{applicant.name}</td>
-                                <td>{applicant.email}</td>
-                                <td>{applicant.shortDescription}</td>
-                                <td>{applicant.cv}</td>
-                                <td>
-                                    <button
-                                        className={styles.buttonTable}
-                                        onClick={(e) => {
-                                            e.stopPropagation()
-                                            handleChooseButton(applicant.id)
-                                        }}>
-                                        Choose
-                                    </button>
-                                    <button className={styles.buttonTable} onClick={(e) => {
-                                        e.stopPropagation()
-                                        handleChooseButton(applicant.id)
-                                    }}>
-                                        Reject
-                                    </button>
-                                </td>
-                            </tr>))}
-                        </tbody>
-                    </table>
+        {chooseShowing && (<div className={styles.fixed}>
+            <div className={styles.blur}></div>
+            <div className={styles.popup}>
+                <div className={styles.head}>
+                    <div className={styles.title}>Choose Applicant</div>
+                    <button
+                        onClick={() => setChooseShowing(false)}
+                        className={styles.buttonSmall}>
+                        X
+                    </button>
                 </div>
+                <div className={styles.form}>
+                    <div>Interview Time</div>
+                    <input
+                        type="datetime-local"
+                        className={styles.input}
+                        onChange={(e) => setInterviewTime(e.target.value)}
+                    />
+                </div>
+                <div className={styles.form}>
+                    <div>Interview Data</div>
+                    <div>{interviewData?.time}</div>
+                </div>
+
+                <button
+                    className={styles.saveButton}
+                    onClick={handleSubmit}>
+                    Submit
+                </button>
             </div>
-        </>);
+        </div>)}
+        <Heading/>
+        <div>
+            <link
+                href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+                rel="stylesheet"
+                integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+                crossOrigin="anonymous"
+            />
+
+            <div className={styles.mainTable}>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Short Description</th>
+                        <th scope="col">Resume</th>
+                        <th scope="col">Option</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {applicants.map((applicant) => (<tr
+                        id={applicant.id}
+                        onClick={() => router.push("/user/" + applicant.id)}
+                    >
+                        <td>{applicant.id}</td>
+                        <td>{applicant.name}</td>
+                        <td>{applicant.email}</td>
+                        <td>{applicant.shortDescription}</td>
+                        <td><a
+                            href={process.env.NEXT_PUBLIC_API_FILE_URL + `getCV/${applicant.cv.id}`}
+                            target="_blank"
+                            rel="noopener noreferrer" download>
+                            {applicant.cv.filename}
+                        </a></td>
+                        <td>
+                            <button
+                                className={styles.buttonTable}
+                                onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleChooseButton(applicant.id)
+                                }}>
+                                Choose
+                            </button>
+                            <button className={styles.buttonTable} onClick={(e) => {
+                                e.stopPropagation()
+                                handleChooseButton(applicant.id)
+                            }}>
+                                Reject
+                            </button>
+                        </td>
+                    </tr>))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </>);
 }
