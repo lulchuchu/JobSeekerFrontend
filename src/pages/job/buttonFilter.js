@@ -47,22 +47,18 @@ export default function ButtonFilter({ companyId, changeFilter , changeResult}) 
     }
 
     function handleDateChangeRadio(e) {
-        console.log(e.target.value);
         setCurrentDate(e.target.value);
     }
 
     function handleExperienceChangeRadio(e) {
-        console.log(e.target.value);
         setCurrentExperience(e.target.value);
     }
 
     function handleJobTypeChangeRadio(e) {
-        console.log(e.target.value);
         setCurrentJobType(e.target.value);
     }
 
     function handleOnSiteChangeRadio(e) {
-        console.log(e.target.value);
         setCurrentOnSite(e.target.value);
     }
 

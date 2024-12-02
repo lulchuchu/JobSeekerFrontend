@@ -3,8 +3,6 @@ import styles from "@/styles/userpage.module.css";
 
 
 export default function PageButton({currPage,setCurrPage, maxPage=10}) {
-    console.log("currPage", currPage)
-    console.log("maxPage", maxPage)
     return (
         <div className={styles.paginationButton}>
             <button

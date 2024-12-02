@@ -46,7 +46,6 @@ export default function Post({ post }) {
                 //     "/user/notification",
                 //     onNotificationReceived
                 // );
-                console.log("Connected");
             }
 
             function onError(error) {
@@ -123,11 +122,9 @@ export default function Post({ post }) {
                         params: { postId: postId },
                     }
                 );
-                console.log(result.data);
                 setComments(result.data);
             };
             comment();
-            console.log("running comment button");
         }
     }
 

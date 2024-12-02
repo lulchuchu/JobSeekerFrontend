@@ -25,11 +25,9 @@ export default function login() {
             username: username,
             password: password,
         };
-        console.log({data})
         try {
             const loginUrl = process.env.NEXT_PUBLIC_API_LOGIN_URL;
             const resultLogin = (await axios.post(loginUrl, data)).data;
-            console.log("resultLogin", resultLogin);
             setToken(resultLogin.accessToken);
             localStorage.setItem("token", JSON.stringify(resultLogin));
             localStorage.setItem("user", resultLogin.name)

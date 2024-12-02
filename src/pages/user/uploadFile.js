@@ -39,7 +39,6 @@ export default function UploadFile({setUpload, isProfilePic = false}) {
         formData.append("files", file);
         setFiles(formData);
         setImgSrc()
-        console.log(file.name);
     }
 
     function handleConfirm() {

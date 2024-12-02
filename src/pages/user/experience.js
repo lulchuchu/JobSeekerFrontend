@@ -2,7 +2,6 @@ import styles from "@/styles/experience.module.css";
 import Link from "next/link";
 
 export default function Experience({ experience }) {
-    console.log("experience in exp", experience);
     const companyLogo =
         process.env.NEXT_PUBLIC_API_PIC_URL + experience.company.profilePicture;
     // const logoUrl = process.env.NEXT_PUBLIC_API_PIC_URL + companyLogo;

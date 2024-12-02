@@ -40,8 +40,6 @@ export default function Jobb({ companyId, totalPage }) {
                 process.env.NEXT_PUBLIC_API_JOB_URL + "all",
                 { params: currValue }
             );
-            console.log("result", result.data);
-
             setJob(result.data);
         };
         fetchData();
@@ -51,7 +49,6 @@ export default function Jobb({ companyId, totalPage }) {
     for (let i = 0; i < job.totalPages; i++) {
         pageNum.push(i + 1);
     }
-    console.log("pageNum", pageNum);
 
     return (
         <>

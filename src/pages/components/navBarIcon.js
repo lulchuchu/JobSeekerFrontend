@@ -29,7 +29,6 @@ export default function NavBarIcon(props) {
                     onClick={() => setUserToggle(!userToggle)}>
                     <div>{props.component}</div>
                     <div>{props.name}</div>
-                    {console.log("navigate to " + props.name + " icon")}
                     {userToggle && props.token && (
                         <div className={styles.userNavigate}>
                             <div
@@ -49,13 +48,11 @@ export default function NavBarIcon(props) {
                 <div className={styles.icon}>
                     <div>{props.component}</div>
                     <div>{props.name}</div>
-                    {console.log("navigate to " + props.name + " icon")}
                 </div>
             ) : (
                 <Link href={url} className={styles.icon}>
                     <div>{props.component}</div>
                     <div>{props.name}</div>
-                    {console.log("navigate to " + props.name + " icon")}
                 </Link>
             )}
         </>

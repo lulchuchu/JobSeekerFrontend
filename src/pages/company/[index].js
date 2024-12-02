@@ -77,8 +77,6 @@ export default function company() {
                         size: itemsPerPage,
                     },
                 });
-                console.log("result JOBB data" , result.data)
-                
                 setJobs(result.data);
             };
             resultJob();
@@ -96,7 +94,6 @@ export default function company() {
                     },
                 });
                 result.data.totalPages>0 && setMaxPostPage(result.data.totalPages)
-                console.log("result.data", result.data)
                 setPosts(result.data);
             };
             resultPost();
@@ -124,7 +121,6 @@ export default function company() {
                     <div className={styles.mainContent}>
                         <div className={styles.text}>
                             <div>Page posts</div>
-                            {console.log("post", posts)}
                             <PageButton
                                 currPage={currPagePost}
                                 setCurrPage={setCurrPagePost}

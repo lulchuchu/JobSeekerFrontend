@@ -8,10 +8,7 @@ import SockJS from "sockjs-client";
 import {over} from "stompjs";
 
 export default function CreatePost({
-                                       token,
-                                       setCreatePostShowing,
-                                       photos,
-                                       files,
+                                       token, setCreatePostShowing, photos, files,
                                    }) {
     const userId = token.id;
     const profilePicture = token.profilePicture;
@@ -36,7 +33,6 @@ export default function CreatePost({
                 //     "/user/notification",
                 //     onNotificationReceived
                 // );
-                console.log("Connected");
             }
 
             function onError(error) {
@@ -54,37 +50,23 @@ export default function CreatePost({
     function handleSendClick() {
         //Upload photos
         const fetchData = async () => {
-            const result = files ? await axios.post(
-                process.env.NEXT_PUBLIC_API_FILE_URL + "upload",
-                files,
-                {
-                    headers: {
-                        Authorization:
-                            "Bearer " +
-                            JSON.parse(localStorage.getItem("token"))
-                                .accessToken,
-                    },
-                }
-            ) : null;
+            const result = files ? await axios.post(process.env.NEXT_PUBLIC_API_FILE_URL + "upload", files, {
+                headers: {
+                    Authorization: "Bearer " + JSON.parse(localStorage.getItem("token")).accessToken,
+                },
+            }) : null;
 
             const data = {
-                content: content,
-                images: result ? result.data : null,
+                content: content, images: result ? result.data : null,
             };
 
             //Create new Post with photos
             const post = async () => {
-                console.log("content in post is " + content);
-                const result = await axios.post(
-                    process.env.NEXT_PUBLIC_API_POST_URL + "create",
-                    data,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token.accessToken}`,
-                        },
-                    }
-                );
-                console.log(result.data);
+                const result = await axios.post(process.env.NEXT_PUBLIC_API_POST_URL + "create", data, {
+                    headers: {
+                        Authorization: `Bearer ${token.accessToken}`,
+                    },
+                });
 
                 const postNoti = {
                     message: token.name + " posted a new post",
@@ -92,16 +74,7 @@ export default function CreatePost({
                     senderName: token.name,
                     postId: result.data,
                 };
-
-                console.log('postNoti', postNoti)
-
-                stompClient.send(
-                    "/app/receive-post-notification",
-                    {},
-                    JSON.stringify(postNoti)
-                );
-
-                alert(result.data);
+                stompClient.send("/app/receive-post-notification", {}, JSON.stringify(postNoti));
             };
             setContent('');
             setShowingPhoto(false);
@@ -131,10 +104,7 @@ export default function CreatePost({
         // post();
     }
 
-    console.log("content is " + content);
-
-    return (
-        <div className={styles.mainPost}>
+    return (<div className={styles.mainPost}>
             <div className={styles.create}>
                 <img
                     className={styles.profilePic}
@@ -157,11 +127,7 @@ export default function CreatePost({
             </div>
 
             <div>
-                {showingPhoto &&
-                    photos &&
-                    photos.map((photo) => (
-                        <img src={photo} width={200} height={200}/>
-                    ))}
+                {showingPhoto && photos && photos.map((photo) => (<img src={photo} width={200} height={200}/>))}
             </div>
 
             <button
@@ -172,6 +138,5 @@ export default function CreatePost({
                     <p className={styles.buttonText}>Add a photo</p>
                 </div>
             </button>
-        </div>
-    );
+        </div>);
 }

@@ -92,9 +92,6 @@ export default function login() {
                             />
                             <br />
                         </div>
-
-                        <p>{console.log(username)}</p>
-                        <p>{console.log(password)}</p>
                     </form>
                     <button onClick={sendInput} className={styles.button}>Register</button>
                 </div>

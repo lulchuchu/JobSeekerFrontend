@@ -14,7 +14,6 @@ export default function JobDetail({ job , setShowApply}) {
     const [isAdmin, setIsAdmin] = useState(false);
     const router = useRouter();
     const jobId = job.id;
-    console.log({job})
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
@@ -33,7 +32,6 @@ export default function JobDetail({ job , setShowApply}) {
                         params: { applicationId: jobId },
                     }
                 );
-                console.log("data is ", res.data);
                 setIsApplied(res.data);
             };
             isApplied();
@@ -53,7 +51,6 @@ export default function JobDetail({ job , setShowApply}) {
                         params: { userId: token.id, companyId: job.company.id},
                     }
                 );
-                console.log("data is ", res.data);
                 setIsAdmin(res.data);
             };
             isApplied();

@@ -38,7 +38,6 @@ export default function InfoCard({ company }) {
             {},
             { headers: { Authorization: `Bearer ${token.accessToken}` } }
         ).data;
-        console.log(isFollowed ? "unfollowed" : "followed" + " user");
     }
 
     return (

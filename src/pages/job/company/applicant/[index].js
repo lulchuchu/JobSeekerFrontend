@@ -35,7 +35,6 @@ export default function Applicant() {
                 //     "/user/notification",
                 //     onNotificationReceived
                 // );
-                console.log("Connected");
             }
 
             function onError(error) {
@@ -64,7 +63,6 @@ export default function Applicant() {
                         Authorization: `Bearer ${token.accessToken}`,
                     },
                 });
-                console.log("data is ", result.data);
                 setApplicants(result.data);
                 setApplication(applicationDetail.data);
             };
@@ -83,7 +81,6 @@ export default function Applicant() {
                     Authorization: `Bearer ${token.accessToken}`,
                 },
             });
-            console.log("result", result);
         };
 
         fetchData();
@@ -107,7 +104,6 @@ export default function Applicant() {
                 },
             });
             setInterviewData(result.data);
-            console.log("result", result.data);
         };
         fetchData();
     }

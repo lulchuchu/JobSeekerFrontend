@@ -29,9 +29,7 @@ export default function Heading() {
         if (token) {
             // let stompClient = setStompClient(over(Sock));
             stompClient?.connect({}, onConnected, onError);
-            console.log("stompClient", "/user/" + token.name + "/notification");
             function onConnected() {
-                console.log("subcribing");
                 stompClient.subscribe(
                     "/user/" + token.name + "/notification",
                     onNotificationReceived
@@ -43,7 +41,6 @@ export default function Heading() {
             }
 
             function onNotificationReceived(noti) {
-                console.log("Received notification:", JSON.parse(noti.body));
                 let lst = [...notification];
                 lst.push(JSON.parse(noti.body));
                 setNotification(lst);
@@ -72,7 +69,6 @@ export default function Heading() {
                         },
                     }
                 );
-                console.log("result", result.data);
                 setNotification(result.data);
             };
             fetchData();

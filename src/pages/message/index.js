@@ -18,13 +18,11 @@ export default function Message() {
         if(token){
             const fetch = async () => {
                 const result = await axios.get(
-                    process.env.NEXT_PUBLIC_API_USER_URL + "following",
+                    process.env.NEXT_PUBLIC_API_CHAT_URL + "list",
                     {
-                        headers: { Authorization: `Bearer ${token.accessToken}` },
-                        params: { userId: token.id },
+                        headers: { Authorization: `Bearer ${token.accessToken}` }
                     }
                 );
-                console.log(result.data);
                 setFollowing(result.data);
             };
             fetch();

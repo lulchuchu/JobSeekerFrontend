@@ -30,16 +30,13 @@ export default function InfoCard({
     function handleClickFollow() {
         setIsFollowed(!isFollowed);
         const result = axios.post(process.env.NEXT_PUBLIC_API_USER_URL + "addfollow" + "?followId=" + following_id, {}, {headers: {Authorization: `Bearer ${token.accessToken}`}}).data;
-        console.log(isFollowed ? "unfollowed" : "followed" + " user");
     }
 
     function handleAddProfile() {
-        console.log("add profile clicked");
         setEdit(true);
     }
 
     function handleUploadFile() {
-        console.log("upload file clicked");
         setUpload(true);
     }
 

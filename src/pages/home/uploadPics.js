@@ -37,7 +37,6 @@ export default function UploadPics({ setUpload, setPhotos, setFiles }) {
                     setPhotos(images);
                 }
             };
-            console.log("fileee", filesUpload[i]);
             fileReader.readAsDataURL(filesUpload[i]);
             formData.append("files", filesUpload[i]);
         }

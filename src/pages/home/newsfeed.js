@@ -27,7 +27,6 @@ export default function Newsfeed() {
     useEffect(() => {
         if (token != null) {
             const postUrl = process.env.NEXT_PUBLIC_API_POST_URL + "newsfeed";
-            console.log("token in newsfeed " + token.accessToken);
             const resultNewsfeed = axios
                 .get(postUrl, {
                     headers: { Authorization: `Bearer ${token.accessToken}` },
@@ -35,10 +34,6 @@ export default function Newsfeed() {
                 .then((res) => setNews(res.data));
         }
     }, [token]);
-
-    if (token) {
-        console.log(news);
-    }
 
     return (
         <>

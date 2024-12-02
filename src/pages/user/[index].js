@@ -23,6 +23,7 @@ export default function User() {
     const [posts, setPosts] = useState([]);
     const [currPage, setCurrPage] = useState(1);
     const [following, setFollowing] = useState([]);
+    const [suggestFollow, setSuggestFollow] = useState([]);
     const [showMoreFollow, setShowMoreFollow] = useState(false);
     const [maxPostPage, setMaxPostPage] = useState(1);
 
@@ -84,8 +85,22 @@ export default function User() {
             fetchPostsByUser();
         }
     }, [token, user_id, currPage]);
-
     function handleShowPost() {}
+    useEffect(() => {
+        if (token && user_id) {
+            const fetchSuggestFollow = async () => {
+                const res = await axios.get(
+                    process.env.NEXT_PUBLIC_API_USER_URL + "suggest",
+                    {
+                        headers: { Authorization: `Bearer ${token.accessToken}` },
+                        params: { userId: user_id },
+                    }
+                );
+                setSuggestFollow(res.data);
+            };
+            fetchSuggestFollow();
+        }
+    }, [token, user_id]);
 
     return (
         <>
@@ -142,16 +157,25 @@ export default function User() {
                             People this person following
                         </div>
                         {(showMoreFollow
-                            ? following.slice(0, 10)
-                            : following.slice(0, 5)
+                                ? following.slice(0, 10)
+                                : following.slice(0, 5)
                         ).map((user) => (
-                            <SideUser user={user} />
+                            <SideUser user={user}/>
                         ))}
                         <button
                             className={styles.showAll}
                             onClick={() => setShowMoreFollow(!showMoreFollow)}>
                             {showMoreFollow ? "Show less" : "Show more"}
                         </button>
+                    </div>
+
+                    <div className={styles.subSide}>
+                        <div className={styles.text}>
+                            Suggestions for you
+                        </div>
+                        {suggestFollow.map((user) => (
+                            <SideUser user={user}/>
+                        ))}
                     </div>
                 </div>
             </div>

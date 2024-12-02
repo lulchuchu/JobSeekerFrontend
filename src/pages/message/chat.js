@@ -44,7 +44,6 @@ export default function Chat({ token, receiver }) {
                 "/user/" + token.name + "/message",
                 onMessageReceive
             );
-            console.log("Connected");
         }
 
         function onError(error) {
@@ -53,10 +52,8 @@ export default function Chat({ token, receiver }) {
 
         function onMessageReceive(message) {
             let lst = [...messages, JSON.parse(message.body)];
-            console.log("body", message.body);
             // lst.push(JSON.parse(message.body));
             setMessages(lst);
-            console.log("Received message:", messages);
             // scrollToBottom();
         }
         return () => {

@@ -31,7 +31,6 @@ export default function Application() {
                         },
                     }
                 );
-                console.log("all", result.data);
                 setApplications(result.data);
             };
             fetch();

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import styles from "@/styles/userpage.module.css";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import {useEffect, useState} from "react";
+import {useRouter} from "next/router";
 import axios from "axios";
 
-export default function SideUser({ user }) {
+export default function SideUser({user}) {
     const [isFollowing, setIsFollowing] = useState(false);
     const [token, setToken] = useState(null);
     const router = useRouter();
@@ -18,8 +18,8 @@ export default function SideUser({ user }) {
     useEffect(() => {
         const resultCheckFollow = async () => {
             const resCheckFollow = await axios.get(checkFollowUrl, {
-                headers: { Authorization: `Bearer ${token.accessToken}` },
-                params: { followId: user.id },
+                headers: {Authorization: `Bearer ${token.accessToken}`},
+                params: {followId: user.id},
             });
             setIsFollowing(resCheckFollow.data);
         };
@@ -30,7 +30,7 @@ export default function SideUser({ user }) {
         const result = axios.post(
             addFollowUrl + "?followId=" + user.id,
             {},
-            { headers: { Authorization: `Bearer ${token.accessToken}` } }
+            {headers: {Authorization: `Bearer ${token.accessToken}`}}
         );
         setIsFollowing(!isFollowing);
     }
@@ -45,6 +45,8 @@ export default function SideUser({ user }) {
                     }
                     alt={user.name}
                     className={styles.smallProfilePic}
+                    width={50}
+                    height={50}
                 />
             </Link>
 
