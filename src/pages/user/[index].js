@@ -44,9 +44,9 @@ export default function User() {
     //Set user information
     useEffect(() => {
         if (token && user_id) {
-            if (token.id === user_id) {
-                setIsMyself(true);
-            }
+            console.log({ token });
+            console.log({ user_id });
+            token.id === user_id ? setIsMyself(true) : setIsMyself(false);
             const resultUser = async () => {
                 const resUserDetail = await axios.get(user_url, {
                     headers: { Authorization: `Bearer ${token.accessToken}` },
@@ -92,7 +92,9 @@ export default function User() {
                 const res = await axios.get(
                     process.env.NEXT_PUBLIC_API_USER_URL + "suggest",
                     {
-                        headers: { Authorization: `Bearer ${token.accessToken}` },
+                        headers: {
+                            Authorization: `Bearer ${token.accessToken}`,
+                        },
                         params: { userId: user_id },
                     }
                 );
@@ -107,8 +109,12 @@ export default function User() {
             {editShowing && isMyself && (
                 <EditUser userDetail={userDetail} setEdit={setEditShowing} />
             )}
-            {uploadShowing && isMyself && <UploadFile setUpload = {setUploadShowing} />}
-            {uploadPic && isMyself && <UploadFile setUpload = {setUploadPic} isProfilePic = {true}/>}
+            {uploadShowing && isMyself && (
+                <UploadFile setUpload={setUploadShowing} />
+            )}
+            {uploadPic && isMyself && (
+                <UploadFile setUpload={setUploadPic} isProfilePic={true} />
+            )}
 
             <Heading />
             <div className={styles.all}>
@@ -140,15 +146,17 @@ export default function User() {
                         </div>
                         <button
                             className={styles.showAll}
-                            onClick={handleShowPost}>
+                            onClick={handleShowPost}
+                        >
                             Show All Posts
                         </button>
                     </div>
                     <div className={styles.mainContent}>
                         <div className={styles.text}>Experience</div>
-                        {experience && experience.map((exp) => (
-                            <Experience experience={exp} key={exp.id} />
-                        ))}
+                        {experience &&
+                            experience.map((exp) => (
+                                <Experience experience={exp} key={exp.id} />
+                            ))}
                     </div>
                 </div>
                 <div className={styles.side}>
@@ -157,24 +165,23 @@ export default function User() {
                             People this person following
                         </div>
                         {(showMoreFollow
-                                ? following.slice(0, 10)
-                                : following.slice(0, 5)
+                            ? following.slice(0, 10)
+                            : following.slice(0, 5)
                         ).map((user) => (
-                            <SideUser user={user}/>
+                            <SideUser user={user} />
                         ))}
                         <button
                             className={styles.showAll}
-                            onClick={() => setShowMoreFollow(!showMoreFollow)}>
+                            onClick={() => setShowMoreFollow(!showMoreFollow)}
+                        >
                             {showMoreFollow ? "Show less" : "Show more"}
                         </button>
                     </div>
 
                     <div className={styles.subSide}>
-                        <div className={styles.text}>
-                            Suggestions for you
-                        </div>
+                        <div className={styles.text}>Suggestions for you</div>
                         {suggestFollow.map((user) => (
-                            <SideUser user={user}/>
+                            <SideUser user={user} />
                         ))}
                     </div>
                 </div>

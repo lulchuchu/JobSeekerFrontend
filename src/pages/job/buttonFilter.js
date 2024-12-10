@@ -2,7 +2,7 @@ import styles from "@/styles/job.module.css";
 import { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 
-export default function ButtonFilter({ companyId, changeFilter , changeResult}) {
+export default function ButtonFilter({ companyId, changeFilter , changeResult, setCurrPage}) {
     const [dateButtonToogle, setDateButtonToogle] = useState(false);
     const [experienceButtonToogle, setExperienceButtonToogle] = useState(false);
     const [jobTypeButtonToogle, setJobTypeButtonToogle] = useState(false);
@@ -75,6 +75,7 @@ export default function ButtonFilter({ companyId, changeFilter , changeResult}) 
 
         changeFilter(data);
         changeResult(null);
+        setCurrPage(1)
     }
 
     return (
@@ -217,18 +218,18 @@ export default function ButtonFilter({ companyId, changeFilter , changeResult}) 
                             <li className={styles.listItem}>
                                 <input
                                     type="radio"
-                                    value="Full time"
-                                    checked={currentJobType === "Full time"}
+                                    value="Full-time"
+                                    checked={currentJobType === "Full-time"}
                                 />
                                 Full time
                             </li>
                             <li className={styles.listItem}>
                                 <input
                                     type="radio"
-                                    value="Part time"
-                                    checked={currentJobType === "Part time"}
+                                    value="Contract"
+                                    checked={currentJobType === "Contract"}
                                 />
-                                Part time
+                                Contract
                             </li>
                             <li className={styles.listItem}>
                                 <input
@@ -281,6 +282,14 @@ export default function ButtonFilter({ companyId, changeFilter , changeResult}) 
                                     checked={currentOnSite === "Remote"}
                                 />
                                 Remote
+                            </li>
+                            <li className={styles.listItem}>
+                                <input
+                                    type="radio"
+                                    value="Hybrid"
+                                    checked={currentOnSite === "Hybrid"}
+                                />
+                                Hybrid
                             </li>
                         </ul>
                         <button

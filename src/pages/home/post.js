@@ -10,6 +10,7 @@ import { MdOutlineInsertComment } from "react-icons/md";
 import { IoSend } from "react-icons/io5";
 
 import styles from "@/styles/post.module.css";
+import process from "next/dist/build/webpack/loaders/resolve-url-loader/lib/postcss";
 
 export default function Post({ post }) {
     const [isLiked, setIsLiked] = useState(false);
@@ -107,24 +108,28 @@ export default function Post({ post }) {
         setIsLiked(!isLiked);
     }
 
+    function showComment() {
+        setCommentShowing(true);
+        const comment = async () => {
+            const result = await axios.get(
+                process.env.NEXT_PUBLIC_API_COMMENT_URL + "show",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token.accessToken}`,
+                    },
+                    params: { postId: postId },
+                }
+            );
+            setComments(result.data);
+        };
+        comment();
+    }
+
     function handleCommentButton() {
         if (commentShowing) {
             setCommentShowing(false);
         } else {
-            setCommentShowing(true);
-            const comment = async () => {
-                const result = await axios.get(
-                    process.env.NEXT_PUBLIC_API_COMMENT_URL + "show",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token.accessToken}`,
-                        },
-                        params: { postId: postId },
-                    }
-                );
-                setComments(result.data);
-            };
-            comment();
+            showComment();
         }
     }
 
@@ -148,7 +153,7 @@ export default function Post({ post }) {
                 JSON.stringify(commentNoti)
             );
 
-            const result = axios.post(
+            await axios.post(
                 process.env.NEXT_PUBLIC_API_COMMENT_URL + "post",
                 data,
                 { headers: { Authorization: `Bearer ${token.accessToken}` } }
@@ -158,7 +163,7 @@ export default function Post({ post }) {
         await send();
         setCommentContent('');
         setCountComment(countComment + 1);
-        handleCommentButton();
+        showComment();
     }
 
     return (
@@ -218,7 +223,7 @@ export default function Post({ post }) {
                 </button>
             </div>
             <div className={styles.commentLayout}>
-                {comments != undefined && commentShowing
+                {comments && commentShowing
                     ? comments.map((comment) => (
                         <div key = {comment.id} className={styles.comment}>
                               <img
@@ -261,11 +266,11 @@ export default function Post({ post }) {
                     value = {commentContent}
                     placeholder="Write a comment"
                     onChange={(e) => setCommentContent(e.target.value)}></input>
-                <Link href="">
+                {/*<Link href="">*/}
                     <button className={styles.sendButton} disabled = {!commentContent} onClick={handleSendButton}>
                         <IoSend className={styles.sendIcon} size={24} />
                     </button>
-                </Link>
+                {/*</Link>*/}
             </div>
         </div>
     );

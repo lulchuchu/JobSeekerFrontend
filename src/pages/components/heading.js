@@ -1,17 +1,15 @@
-// import cheemspic from './src/pages/pics/cheemspic.png';
-
-import { useState } from "react";
-import { useEffect } from "react";
+import {useState} from "react";
+import {useEffect} from "react";
 import Link from "next/link";
-import { MdWork } from "react-icons/md";
-import { AiFillMessage } from "react-icons/ai";
-import { IoMdNotifications } from "react-icons/io";
-import { FiLogIn } from "react-icons/fi";
+import {MdWork} from "react-icons/md";
+import {AiFillMessage} from "react-icons/ai";
+import {IoMdNotifications} from "react-icons/io";
+import {FiLogIn} from "react-icons/fi";
 import NavBarIcon from "./navBarIcon";
 import styles from "@/styles/heading.module.css";
 import axios from "axios";
 import SockJS from "sockjs-client";
-import { over } from "stompjs";
+import {over} from "stompjs";
 
 export default function Heading() {
     const [token, setToken] = useState(null);
@@ -29,6 +27,7 @@ export default function Heading() {
         if (token) {
             // let stompClient = setStompClient(over(Sock));
             stompClient?.connect({}, onConnected, onError);
+
             function onConnected() {
                 stompClient.subscribe(
                     "/user/" + token.name + "/notification",
@@ -44,7 +43,8 @@ export default function Heading() {
                 let lst = [...notification];
                 lst.push(JSON.parse(noti.body));
                 setNotification(lst);
-                setnotiShow(true)
+                setnotiShow(true);
+                setTimeout(() => setnotiShow(false), 5000);
             }
         }
         return () => {
@@ -87,13 +87,13 @@ export default function Heading() {
             <span className={styles.iconOption}>
                 <NavBarIcon
                     url="/job"
-                    component={<MdWork size={30} />}
+                    component={<MdWork size={30}/>}
                     name="Jobs"
                 />
                 {token && (
                     <NavBarIcon
                         url="/message"
-                        component={<AiFillMessage size={30} />}
+                        component={<AiFillMessage size={30}/>}
                         name="Messages"
                     />
                 )}
@@ -105,7 +105,7 @@ export default function Heading() {
                             }}>
                             <NavBarIcon
                                 url=""
-                                component={<IoMdNotifications size={30} />}
+                                component={<IoMdNotifications size={30}/>}
                                 name="Notifications"
                             />
                         </div>
@@ -114,7 +114,7 @@ export default function Heading() {
                             <div className={styles.noti}>
                                 {notification?.map((noti) => (
                                     <div key={noti.id} className={styles.oneNoti}>
-                                        {noti.senderAvatar != null?<img
+                                        {noti.senderAvatar != null ? <img
                                             className={styles.profilePicture}
                                             src={
                                                 process.env
@@ -123,14 +123,14 @@ export default function Heading() {
                                             }
                                             width={41}
                                             height={41}
-                                        />:null}
+                                        /> : null}
                                         <div>
-                                            {noti.message} {noti.postID != null ? noti.postId: null}
+                                            {noti.message} {noti.postID != null ? noti.postId : null}
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                        ): <div className={styles.noti}>None to show</div>)}
+                        ) : <div className={styles.noti}>None to show</div>)}
                     </div>
                 )}
                 {token ? (
@@ -155,7 +155,7 @@ export default function Heading() {
                 ) : (
                     <NavBarIcon
                         url="/login"
-                        component={<FiLogIn size={30} />}
+                        component={<FiLogIn size={30}/>}
                         name="Login"
                     />
                 )}

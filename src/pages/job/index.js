@@ -32,7 +32,7 @@ export default function Jobb({ companyId, totalPage }) {
         numberPerPage: numberPerPage,
     });
 
-
+    console.log({currPagee})
     //Fetch jobs list data
     useEffect(() => {
         const fetchData = async () => {
@@ -60,6 +60,7 @@ export default function Jobb({ companyId, totalPage }) {
                     changeFilter={setCurrValue}
                     changeResult={setCurrentJob}
                     companyId={companyId}
+                    setCurrPage={setCurrPage}
                 />
                 {/* Main Layout */}
                 <div className={styles.mainLayout}>

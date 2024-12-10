@@ -150,7 +150,7 @@ export default function Applicant() {
             />
 
             <div className={styles.mainTable}>
-                <table class="table table-hover">
+                <table className="table table-hover">
                     <thead>
                     <tr>
                         <th scope="col">Id</th>

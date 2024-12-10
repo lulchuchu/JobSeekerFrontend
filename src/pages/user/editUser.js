@@ -9,6 +9,7 @@ export default function EditUser({ userDetail, setEdit }) {
     const [address, setAddress] = useState(userDetail?.address);
     const [email, setEmail] = useState(userDetail?.email);
     const [token, setToken] = useState(null);
+    const [bio, setBio] = useState(null);
     const router = useRouter();
 
     useEffect(() => {
@@ -24,7 +25,7 @@ export default function EditUser({ userDetail, setEdit }) {
             shortDescription: shortDescription,
             address: address,
             email: email,
-
+            bio: bio
         }
 
         const result = axios.post(change_url, data, { headers: { Authorization: `Bearer ${token.accessToken}` } }).data;
@@ -39,41 +40,50 @@ export default function EditUser({ userDetail, setEdit }) {
                     <div className={styles.title}>Edit Profile</div>
                     <button onClick={() => setEdit(false)} className={styles.buttonSmall}>X</button>
                 </div>
-                    <div className={styles.form}>
-                        <div>Name</div>
-                        <input
-                            type="text"
-                            className={styles.input}
-                            placeholder={userDetail?.name}
-                            onChange={(e) => setName(e.target.value)}></input>
-                    </div>
-                    <div className={styles.form}>
-                        <div>Short Description</div>
-                        <input
-                            type="text"
-                            className={styles.input}
-                            placeholder={userDetail?.shortDescription}
-                            onChange={(e) => setShortDescription(e.target.value)}></input>
-                    </div>
-                    <div className={styles.form}>
-                        <div>Address</div>
-                        <input
-                            type="text"
-                            className={styles.input}
-                            placeholder={userDetail?.address}
-                            onChange={(e) => setAddress(e.target.value)}></input>
-                    </div>
-                    <div className={styles.form}>
-                        <div>Email</div>
-                        <input
-                            type="text"
-                            className={styles.input}
-                            placeholder={userDetail?.email}
-                            onChange={(e) => setEmail(e.target.value)}></input>
-                    </div>
-                    <button
+                <div className={styles.form}>
+                    <div>Name</div>
+                    <input
+                        type="text"
+                        className={styles.input}
+                        placeholder={userDetail?.name}
+                        onChange={(e) => setName(e.target.value)}></input>
+                </div>
+                <div className={styles.form}>
+                    <div>Short Description</div>
+                    <input
+                        type="text"
+                        className={styles.input}
+                        placeholder={userDetail?.shortDescription}
+                        onChange={(e) => setShortDescription(e.target.value)}></input>
+                </div>
+                <div className={styles.form}>
+                    <div>Address</div>
+                    <input
+                        type="text"
+                        className={styles.input}
+                        placeholder={userDetail?.address}
+                        onChange={(e) => setAddress(e.target.value)}></input>
+                </div>
+                <div className={styles.form}>
+                    <div>Email</div>
+                    <input
+                        type="text"
+                        className={styles.input}
+                        placeholder={userDetail?.email}
+                        onChange={(e) => setEmail(e.target.value)}></input>
+                </div>
+                <div className={styles.form}>
+                    <div>Bio</div>
+                    <input
+                        type="text"
+                        className={styles.input}
+                        placeholder={userDetail?.bio}
+                        onChange={(e) => setBio(e.target.value)}></input>
+                </div>
+                <button
                     className={styles.saveButton}
-                    onClick={handleUpdate}>Save</button>
+                    onClick={handleUpdate}>Save
+                </button>
             </div>
         </div>
     );
