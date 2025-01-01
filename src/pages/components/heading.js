@@ -42,6 +42,7 @@ export default function Heading() {
             function onNotificationReceived(noti) {
                 let lst = [...notification];
                 lst.push(JSON.parse(noti.body));
+                console.log("notification", JSON.parse(noti.body, null, 2));
                 setNotification(lst);
                 setnotiShow(true);
                 setTimeout(() => setnotiShow(false), 5000);

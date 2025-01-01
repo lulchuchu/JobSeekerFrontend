@@ -86,7 +86,7 @@ export default function Apply({setShowApply, applicationId}) {
                                         {cv.filename}
                                     </a>
                                 </td>
-                                <td>
+                                <td width={20}>
                                     <button
                                         onClick={() => handleChooseCV(cv.id)}
                                         className={styles.buttonChoose}>

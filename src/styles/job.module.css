@@ -19,10 +19,15 @@
     justify-content: center;
     margin-bottom: 20px;
 }
+.searchJob {
+    justify-content: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .buttonLst{
     display: flex;
-
 }
 
 .button {

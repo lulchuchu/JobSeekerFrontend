@@ -1,25 +1,32 @@
 import styles from "@/styles/post.module.css";
 import Link from "next/link";
 import axios from "axios";
-import {useEffect, useState} from "react";
-import {HiOutlinePhotograph} from "react-icons/hi";
-import {IoSend} from "react-icons/io5";
+import { useEffect, useState } from "react";
+import { HiOutlinePhotograph } from "react-icons/hi";
+import { IoSend } from "react-icons/io5";
 import SockJS from "sockjs-client";
-import {over} from "stompjs";
+import { over } from "stompjs";
 
 export default function CreatePost({
-                                       token, setCreatePostShowing, photos, files,
-                                   }) {
+    token,
+    setCreatePostShowing,
+    photos,
+    files,
+    isUser,
+}) {
     const userId = token.id;
-    const profilePicture = token.profilePicture;
+    const profilePicture = isUser ? token.profilePicture: token.companyProfilePicture;
     //Content of post
     const [content, setContent] = useState("");
     //String represent photos name
     const [photosName, setPhotoNames] = useState("");
     //Showing photo status
-    const [showingPhoto, setShowingPhoto] = useState(true); // [1
+    const [showingPhoto, setShowingPhoto] = useState(true);
 
     const [stompClient, setStompClient] = useState(null);
+    // const [company, setCompany] = useState(null);
+
+    const url = isUser ? "create" : "createCompany";
 
     useEffect(() => {
         if (token) {
@@ -47,26 +54,56 @@ export default function CreatePost({
         }
     }, [token]);
 
+    // useEffect(() => {
+    //     if (isUser) {
+    //         axios
+    //             .get(process.env.NEXT_PUBLIC_API_COMPANY_URL + "details", {
+    //                 headers: {
+    //                     Authorization: `Bearer ${token.accessToken}`,
+    //                 },
+    //                 params: { companyId: token.manageCompany },
+    //             })
+    //             .then((res) => setCompany(res.data));
+    //     }
+    // }, [isUser]);
+
     function handleSendClick() {
         //Upload photos
         const fetchData = async () => {
-            const result = files ? await axios.post(process.env.NEXT_PUBLIC_API_FILE_URL + "upload", files, {
-                headers: {
-                    Authorization: "Bearer " + JSON.parse(localStorage.getItem("token")).accessToken,
-                },
-            }) : null;
+            const result = files
+                ? await axios.post(
+                      process.env.NEXT_PUBLIC_API_FILE_URL + "upload",
+                      files,
+                      {
+                          headers: {
+                              Authorization:
+                                  "Bearer " +
+                                  JSON.parse(localStorage.getItem("token"))
+                                      .accessToken,
+                          },
+                      }
+                  )
+                : null;
 
             const data = {
-                content: content, images: result ? result.data : null,
+                content: content,
+                images: result ? result.data : null,
+                company: {
+                    id: token.manageCompany
+                }
             };
 
             //Create new Post with photos
             const post = async () => {
-                const result = await axios.post(process.env.NEXT_PUBLIC_API_POST_URL + "create", data, {
-                    headers: {
-                        Authorization: `Bearer ${token.accessToken}`,
-                    },
-                });
+                const result = await axios.post(
+                    process.env.NEXT_PUBLIC_API_POST_URL + url,
+                    data,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token.accessToken}`,
+                        },
+                    }
+                );
 
                 const postNoti = {
                     message: token.name + " posted a new post",
@@ -74,9 +111,13 @@ export default function CreatePost({
                     senderName: token.name,
                     postId: result.data,
                 };
-                stompClient.send("/app/receive-post-notification", {}, JSON.stringify(postNoti));
+                stompClient.send(
+                    "/app/receive-post-notification",
+                    {},
+                    JSON.stringify(postNoti)
+                );
             };
-            setContent('');
+            setContent("");
             setShowingPhoto(false);
             post();
         };
@@ -104,7 +145,8 @@ export default function CreatePost({
         // post();
     }
 
-    return (<div className={styles.mainPost}>
+    return (
+        <div className={styles.mainPost}>
             <div className={styles.create}>
                 <img
                     className={styles.profilePic}
@@ -117,26 +159,37 @@ export default function CreatePost({
                     className={styles.input}
                     value={content}
                     placeholder="Start a post"
-                    onChange={(e) => setContent(e.target.value)}></input>
+                    onChange={(e) => setContent(e.target.value)}
+                ></input>
 
                 <Link href="">
-                    <button className={styles.sendButton} disabled={!content} onClick={handleSendClick}>
-                        <IoSend className={styles.sendIcon} size={24}/>
+                    <button
+                        className={styles.sendButton}
+                        disabled={!content}
+                        onClick={handleSendClick}
+                    >
+                        <IoSend className={styles.sendIcon} size={24} />
                     </button>
                 </Link>
             </div>
 
             <div>
-                {showingPhoto && photos && photos.map((photo) => (<img src={photo} width={200} height={200}/>))}
+                {showingPhoto &&
+                    photos &&
+                    photos.map((photo) => (
+                        <img src={photo} width={200} height={200} />
+                    ))}
             </div>
 
             <button
                 className={styles.buttonAddPhoto}
-                onClick={() => setCreatePostShowing(true)}>
+                onClick={() => setCreatePostShowing(true)}
+            >
                 <div className={styles.box}>
-                    <HiOutlinePhotograph size={24}/>
+                    <HiOutlinePhotograph size={24} />
                     <p className={styles.buttonText}>Add a photo</p>
                 </div>
             </button>
-        </div>);
+        </div>
+    );
 }

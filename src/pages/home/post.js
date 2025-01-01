@@ -83,7 +83,7 @@ export default function Post({ post }) {
     function handleLikeButton() {
         const like = async () => {
             const data = {
-                message: token.name + " liked your post",
+                message: token.name + " reacted to your post",
                 senderId: token.id,
                 senderName: token.name,
                 postId: postId,

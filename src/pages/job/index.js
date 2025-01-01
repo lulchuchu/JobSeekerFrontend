@@ -15,7 +15,7 @@ export default function Jobb({ companyId, totalPage }) {
     const [job, setJob] = useState([]);
     //Current job details
     const [currentJob, setCurrentJob] = useState(null);
-    const [currPagee, setCurrPage] = useState(1);
+    const [currPagee, setCurrPage] = useState(0);
     const [showApply, setShowApply] = useState(false)
 
     //List of page number
@@ -28,18 +28,25 @@ export default function Jobb({ companyId, totalPage }) {
         experience: null,
         jobType: null,
         onSite: null,
-        currPage: currPagee - 1,
+        currPage: currPagee,
         numberPerPage: numberPerPage,
+        query: ""
     });
+    console.log({currValue})
 
-    console.log({currPagee})
     //Fetch jobs list data
     useEffect(() => {
         const fetchData = async () => {
-            const result = await axios.get(
-                process.env.NEXT_PUBLIC_API_JOB_URL + "all",
-                { params: currValue }
-            );
+            // const result = await axios.get(
+            //     process.env.NEXT_PUBLIC_API_JOB_URL + "all",
+            //     { params: currValue }
+            // );
+            const result = await axios.post(
+                process.env.NEXT_PUBLIC_API_JOB_URL + 'queryJobs',
+                {
+                    ...currValue
+                }
+            )
             setJob(result.data);
         };
         fetchData();

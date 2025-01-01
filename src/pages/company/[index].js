@@ -11,6 +11,7 @@ import SideUser from "../user/sideUser";
 import SideCom from "./sideCompany";
 
 import styles from "@/styles/userpage.module.css";
+import AddJob from "@/pages/company/addJob";
 
 export default function company() {
     const [company, setCompany] = useState(null);
@@ -25,6 +26,8 @@ export default function company() {
     const [showMoreUser, setShowMoreUser] = useState(false);
     const[maxPostPage, setMaxPostPage] = useState(1);
     const[maxJobPage, setMaxJobPage] = useState(1);
+    const [addJobShowing, setAddJobShowing] = useState(false);
+
 
     const router = useRouter();
     const { index } = router.query;
@@ -108,10 +111,15 @@ export default function company() {
 
     return (
         <>
+            {
+                addJobShowing && (
+                    <AddJob setAddJobShowing={setAddJobShowing}/>
+                )
+            }
             <Heading />
             <div className={styles.all}>
                 <div className={styles.main}>
-                    <InfoCard company={company} />
+                    <InfoCard company={company} setAddJobShowing={setAddJobShowing}/>
                     <div className={styles.mainContent}>
                         <div className={styles.text}>About us</div>
                         {company && (

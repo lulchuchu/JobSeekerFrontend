@@ -2,19 +2,19 @@ import Heading from "@/pages/components/heading";
 import styles from "@/styles/job.module.css";
 import axios from "axios";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import {useRouter} from "next/router";
+import {useEffect, useState} from "react";
 import SockJS from "sockjs-client";
-import { over } from "stompjs";
+import {over} from "stompjs";
 
 export default function Application() {
     const router = useRouter();
-    const { index } = router.query;
+    const {index} = router.query;
     const companyId = parseInt(index);
 
     const [token, setToken] = useState(null);
     const [numberApplicants, setNumberApplicants] = useState(0);
-    const [applications, setApplications] = useState([]);
+    const [jobs, setJobs] = useState([]);
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
@@ -31,15 +31,34 @@ export default function Application() {
                         },
                     }
                 );
-                setApplications(result.data);
+                setJobs(result.data);
             };
             fetch();
         }
     }, [companyId, token]);
 
+    function handleCloseJob(jobId) {
+        if (token && jobId) {
+            const result = axios
+                .post(
+                    process.env.NEXT_PUBLIC_API_JOB_URL + "close/" + jobId,
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token.accessToken}`,
+                        },
+                    }
+                ).then(() => {
+                    router.reload();
+
+                })
+            //reload
+        }
+    }
+
     return (
         <>
-            <Heading />
+            <Heading/>
             <div>
                 <link
                     href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
@@ -51,44 +70,45 @@ export default function Application() {
                 <div className={styles.mainTable}>
                     <table class="table table-hover">
                         <thead>
-                            <tr>
-                                <th scope="col">Id</th>
-                                <th scope="col">Title</th>
-                                <th scope="col">Experience</th>
-                                <th scope="col">Type</th>
-                                <th scope="col">OnSite</th>
-                                <th scope="col">Address</th>
-                                <th scope="col">Number of Applicants</th>
-                                {/* <th scope="col">Action</th> */}
-                            </tr>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Experience</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">OnSite</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Number of Applicants</th>
+                            <th scope="col">Action</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            {applications.map((application) => (
-                                <tr
-                                    onClick={() =>
-                                        router.push(
-                                            "/job/company/applicant/" +
-                                                application.id
-                                        )
-                                    }>
-                                    <td>{application.id}</td>
-                                    <td>{application.title}</td>
-                                    <td>{application.experience}</td>
-                                    <td>{application.type}</td>
-                                    <td>{application.onSite}</td>
-                                    <td>{application.address}</td>
-                                    <td>{application.numberOfApplicants}</td>
-                                    {/* <td>
-                                        <button
-                                            className={styles.buttonTable}
-                                            onClick={() =>
-                                                handleChooseButton(application.id)
-                                            }>
-                                            Choose
-                                        </button>
-                                    </td> */}
-                                </tr>
-                            ))}
+                        {jobs.map((job) => (
+                            <tr
+                                onClick={() =>
+                                    router.push(
+                                        "/job/company/applicant/" +
+                                        job.id
+                                    )
+                                }>
+                                <td>{job.id}</td>
+                                <td>{job.title}</td>
+                                <td>{job.experience}</td>
+                                <td>{job.type}</td>
+                                <td>{job.onSite}</td>
+                                <td>{job.address}</td>
+                                <td>{job.numberOfApplicants}</td>
+                                <td>
+                                    <button
+                                        className={styles.buttonTable}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleCloseJob(job.id)
+                                        }}>
+                                        Close
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
                         </tbody>
                     </table>
                 </div>

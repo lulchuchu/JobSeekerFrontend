@@ -53,7 +53,7 @@ export default function User() {
                     params: { userId: user_id },
                 });
                 setUserDetail(resUserDetail.data);
-                setExperience(resUserDetail.data.jobs);
+                setExperience(resUserDetail.data.experiences);
             };
             const resultFollowing = async () => {
                 const resFollowing = await axios.get(follow_url, {
